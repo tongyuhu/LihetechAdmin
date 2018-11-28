@@ -29,150 +29,135 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: 'Dashboard',
+    name: 'dashboard',
+    // meta: { title: '立阖泰'},
     hidden: true,
     children: [{
       path: 'dashboard',
+      // meta: { title: '立阖泰'},
       component: () => import('@/views/dashboard/index')
     }]
   },
   {
-    path: '/example',
+    path: '/HospitalManage',
     component: Layout,
-    redirect: '/example/table',
+    redirect: '/HospitalManage/Hospital',
     name: 'HospitalManage ',
     meta: { title: '医院管理', icon: 'hospital' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'Hospital',
+        name: 'Hospital',
+        component: () => import('@/views/hospitalManage/hospital/index'),
+        meta: { title: '医院管理' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'Doctor',
+        name: 'Doctor',
+        component: () => import('@/views/hospitalManage/doctor/index'),
+        meta: { title: '医生管理' }
       }
     ]
   },
   {
-    path: '/form',
+    path: '/userManage',
     component: Layout,
+    redirect: '/userManage/userList',
+    name: 'userManage ',
+    meta: { title: '用户管理', icon: 'user' },
     children: [
       {
-        path: 'index',
-        name: 'UserManage',
-        component: () => import('@/views/form/index'),
-        meta: { title: '用户管理', icon: 'user' }
-      }
-    ]
-  },
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'MessageManage',
-    meta: {
-      title: '消息管理',
-      icon: 'message'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'userList',
+        name: 'userList',
+        component: () => import('@/views/userManage/user/index'),
+        meta: { title: '用户列表' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'bloodCover',
+        name: 'bloodCover',
+        component: () => import('@/views/userManage/bloodCover/index'),
+        meta: { title: '血压分布' }
       }
     ]
   },
   {
-    path: '/form',
+    path: '/messageManage',
     component: Layout,
+    redirect: '/messageManage/messageList',
+    name: 'messageManage ',
+    meta: { title: '消息管理', icon: 'message' },
     children: [
       {
-        path: 'index',
-        name: 'InfoManage',
-        component: () => import('@/views/form/index'),
-        meta: { title: '资讯管理', icon: 'info' }
+        path: 'messageList',
+        name: 'messageList',
+        component: () => import('@/views/messageManage/messageList/index'),
+        meta: { title: '消息管理' }
       }
     ]
   },
   {
-    path: '/form',
+    path: '/infoManage',
     component: Layout,
+    redirect: '/infoManage/infoList',
+    name: 'infoManage ',
+    meta: { title: '资讯管理', icon: 'info' },
     children: [
       {
-        path: 'index',
-        name: 'SysLog',
-        component: () => import('@/views/form/index'),
-        meta: { title: '系统日志', icon: 'sys' }
+        path: 'infoList',
+        name: 'infoList',
+        component: () => import('@/views/infoManage/infoList/index'),
+        meta: { title: '资讯管理' }
       }
     ]
   },
   {
-    path: '/form',
+    path: '/sysLog',
     component: Layout,
+    redirect: '/sysLog/doctor',
+    name: 'sysLog ',
+    meta: { title: '系统日志', icon: 'sys' },
     children: [
       {
-        path: 'index',
-        name: 'AdminManage',
-        component: () => import('@/views/form/index'),
-        meta: { title: '管理员管理', icon: 'admin' }
+        path: 'doctor',
+        name: 'doctor',
+        component: () => import('@/views/sysLog/doctor/index'),
+        meta: { title: '医生操作日志' }
+      },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/sysLog/user/index'),
+        meta: { title: '用户操作日志' }
       }
     ]
   },
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-  //       meta: { title: 'External Link', icon: 'link' }
-  //     }
-  //   ]
-  // },
-
+  {
+    path: '/adminManage',
+    component: Layout,
+    redirect: '/adminManage/adminList',
+    name: 'adminManage ',
+    meta: { title: '管理员管理', icon: 'admin' },
+    children: [
+      {
+        path: 'adminList',
+        name: 'adminList',
+        component: () => import('@/views/adminManage/adminList/index'),
+        meta: { title: '管理员列表' }
+      },
+      {
+        path: 'power',
+        name: 'power',
+        component: () => import('@/views/adminManage/power/index'),
+        meta: { title: '权限管理' }
+      },
+      {
+        path: 'log',
+        name: 'log',
+        component: () => import('@/views/adminManage/log/index'),
+        meta: { title: '管理员操作日志' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
