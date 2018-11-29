@@ -1,21 +1,20 @@
 <template>
   <div class="dashboard-container">
-    主页
-    <div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-      <div>1</div>
-    </div>
-    <div>yonghu</div>
+      <total></total>
+      <userAdd></userAdd>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-
+import total from './total'
+import userAdd from './userAdd'
 export default {
   name: 'Dashboard',
+  components:{
+    total,
+    userAdd
+  },
   computed: {
     ...mapGetters([
       'name',
