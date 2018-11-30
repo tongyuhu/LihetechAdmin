@@ -3,14 +3,14 @@
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
         <el-input placeholder="请输入医院名称/地址/管理员姓名/电话" v-model="searchData" class="input-with-select">
-          <span slot="prepend">医院名称</span>
-          <el-button slot="append" icon="el-icon-search"></el-button>
+          <span slot="prepend">搜索医院</span>
+          <el-button slot="append" icon="el-icon-search" @click="searchHospitalHandler"></el-button>
         </el-input>
       </div>
       <div class="button-wrap">
         <div>
-          <el-button>添加医院</el-button>
-          <el-button>批量删除</el-button>
+          <el-button plain  type="primary" @click="addHospitalHandler">添加医院</el-button>
+          <el-button plain type="danger" @click="deleteHospitalHandle">批量删除</el-button>
         </div>
         <div class="hospital-num">
           <span>医院：共240</span>  
@@ -72,7 +72,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small">编辑</el-button>
+                <el-button type="text" size="small" @click="addHospitalHandler">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -81,7 +81,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[100, 200, 300, 400]"
+            :page-sizes="[10, 20, 30, 40]"
             :page-size="100"
             layout="total, sizes, prev, pager, next, jumper"
             :total="400">
@@ -89,15 +89,37 @@
         </div>
       </div>
     </el-card>
+    <el-dialog 
+    title="" 
+    :visible.sync="editHospitalDialog" 
+    width="70%">
+      <editHospital @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></editHospital>
+    </el-dialog>
+    <el-dialog 
+    title="" 
+    :visible.sync="deleteConfirm" 
+    width="50%"
+    center
+    >
+    <div class="center-text">
+      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
+      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
+    </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-
+import editHospital from './editHospital'
 export default {
+  name:'hospital',
+  components:{
+    editHospital
+  },
   data() {
     return {
       searchData:'',
+      editHospitalDialog:false,
       tableData:[
         {
           hospitalName: '立阖泰',
@@ -131,7 +153,9 @@ export default {
         }
       ],
       multipleSelection: [],
-      currentPage:1
+      currentPage:1,
+      deleteConfirm:false,
+      currentHospital:{}
     }
   },
   created() {
@@ -145,6 +169,27 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    searchHospitalHandler(){},
+    addHospitalHandler(){
+      // console.log('[[')
+      this.editHospitalDialog=true
+    },
+    deleteHospitalHandle(){
+      if(this.multipleSelection.length>0){
+        this.deleteConfirm = true
+      }else{
+        this.$message({
+          message: '请选择医院',
+          type: 'warning'
+        });
+      }
+    },
+    closeHospitalDialog(){
+      this.editHospitalDialog = false
+    },
+    deleteConfirmHandler(){
+      this.deleteConfirm = false
     }
   }
 }
@@ -154,7 +199,7 @@ export default {
     margin: 20px;
   }
   .search-wrap{
-    width: 60%;
+    width: 450px;
   }
   .button-wrap{
     margin: 20px 0;
@@ -167,5 +212,8 @@ export default {
   }
   .page-wrap{
     margin-top:20px;
+  }
+  .center-text{
+    text-align: center;
   }
 </style>
