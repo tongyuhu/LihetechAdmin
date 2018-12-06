@@ -1,9 +1,9 @@
 
 <template>
   <!-- eslint-disable vue/require-component-is-->
-  <div v-bind="linkProps(to)">
+  <component v-bind="linkProps(to)">
     <slot/>
-  </div>
+  </component>
 </template>
 
 <script>

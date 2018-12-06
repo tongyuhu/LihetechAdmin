@@ -4,13 +4,13 @@
       <div class="search-wrap">
         <el-input placeholder="请输入医院名称/地址/管理员姓名/电话" v-model="searchData" class="input-with-select">
           <span slot="prepend">搜索医院</span>
-          <el-button slot="append" icon="el-icon-search" @click="searchHospitalHandler"></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain  type="primary" @click="addHospitalHandler">添加医院</el-button>
-          <el-button plain type="danger" @click="deleteHospitalHandle">批量删除</el-button>
+          <el-button plain @click="addHandler">添加医院</el-button>
+          <el-button plain @click="deleteHandle">批量删除</el-button>
         </div>
         <div class="hospital-num">
           <span>医院：共240</span>  
@@ -72,7 +72,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHospitalHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -82,18 +82,18 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="100"
+            :page-size="10"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="pageTotal">
           </el-pagination>
         </div>
       </div>
     </el-card>
     <el-dialog 
     title="" 
-    :visible.sync="editHospitalDialog" 
+    :visible.sync="editDialog" 
     width="70%">
-      <editHospital @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></editHospital>
+      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
     </el-dialog>
     <el-dialog 
     title="" 
@@ -110,16 +110,16 @@
 </template>
 
 <script>
-import editHospital from './editHospital'
+import edit from './edit'
 export default {
   name:'hospital',
   components:{
-    editHospital
+    edit
   },
   data() {
     return {
       searchData:'',
-      editHospitalDialog:false,
+      editDialog:false,
       tableData:[
         {
           hospitalName: '立阖泰',
@@ -154,6 +154,8 @@ export default {
       ],
       multipleSelection: [],
       currentPage:1,
+      pageSize:1,
+      pageTotal:40,
       deleteConfirm:false,
       currentHospital:{}
     }
@@ -170,12 +172,11 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    searchHospitalHandler(){},
-    addHospitalHandler(){
-      // console.log('[[')
-      this.editHospitalDialog=true
+    searchHandler(){},
+    addHandler(){
+      this.editDialog=true
     },
-    deleteHospitalHandle(){
+    deleteHandle(){
       if(this.multipleSelection.length>0){
         this.deleteConfirm = true
       }else{
@@ -186,10 +187,13 @@ export default {
       }
     },
     closeHospitalDialog(){
-      this.editHospitalDialog = false
+      this.editDialog = false
     },
     deleteConfirmHandler(){
       this.deleteConfirm = false
+    },
+    getData(){
+
     }
   }
 }

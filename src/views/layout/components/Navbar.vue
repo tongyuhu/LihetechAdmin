@@ -1,102 +1,142 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
+  <div class="navbar">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb />
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img :src="avatar+'?imageView2/1/w/40/h/40'" class="user-avatar">
-        <!-- <i class="el-icon-caret-bottom"/> -->
-      </div>
-      <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <el-dropdown-item >
-          <span @click="edit">编辑资料</span>
-        </el-dropdown-item>
-        <el-dropdown-item divided>
-          <span @click="changePwd">修改密码</span>
-        </el-dropdown-item>
-        <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">退出登录</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-    <el-dialog
+
+    <breadcrumb class="breadcrumb-container"/>
+
+    <div class="right-menu">
+      <template v-if="device!=='mobile'">
+        <!-- <error-log class="errLog-container right-menu-item"/> -->
+
+        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
+          <screenfull class="screenfull right-menu-item"/>
+        </el-tooltip>
+
+        <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
+          <size-select class="international right-menu-item"/>
+        </el-tooltip> -->
+
+        <!-- <lang-select class="international right-menu-item"/> -->
+
+        <!-- <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
+          <theme-picker class="theme-switch right-menu-item"/>
+        </el-tooltip> -->
+      </template>
+
+      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+        <div class="avatar-wrapper">
+          <img :src="avatar+'?imageView2/1/w/40/h/40'" class="user-avatar">
+          <!-- <i class="el-icon-caret-bottom"/> -->
+        </div>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+          <el-dropdown-item >
+            <span @click="edit">编辑资料</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <span @click="changePwd">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <span style="display:block;" @click="logout">退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dialog
       title="编辑资料"
       :visible.sync="editDialog"
       width="50%"
       center>
-      <el-form class="from" ref="editAdminForm" :model="editForm" label-width="40px" :rules="rule">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="电话" prop="mobile">
-          <el-input v-model="editForm.mobile"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="editForm.email"></el-input>
-        </el-form-item>
-      </el-form>
-      <!-- <span>需要注意的是内容是默认不居中的</span> -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialog = false">取 消</el-button>
-        <el-button type="primary" @click="editDialog = false">提 交</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="更改密码"
-      :visible.sync="changePwdDialog"
-      width="50%"
-      center>
-      <!-- :validateField="validateFieldForm('oldPassword')" -->
-      <el-form
-        :model="changePasswordForm" 
-        status-icon 
-        :rules="changePasswordRules" 
-        ref="changpasswordRef" 
-        label-width="70px" 
-        label-position="left"
-        >
-          <el-form-item prop="oldPassword" label="原始密码">
-            <el-input
-              :autofocus="true"
-              placeholder="原始密码"
-              v-model="changePasswordForm.oldPassword">
-            </el-input>
+        <el-form class="from" ref="editAdminForm" :model="editForm" label-width="40px" :rules="rule">
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="editForm.name"></el-input>
           </el-form-item>
-          <el-form-item prop="newPassword1" label="新密码">
-            <el-input
-              :autofocus="true"
-              placeholder="请输入密码"
-              v-model="changePasswordForm.newPassword1">
-              <!-- <template slot="prepend"><i class="el-icon-info"></i></template> -->
-            </el-input>
+          <el-form-item label="电话" prop="mobile">
+            <el-input v-model="editForm.mobile"></el-input>
           </el-form-item>
-          <el-form-item prop="newPassword2" label="确认密码">
-            <el-input
-              :autofocus="true"
-              placeholder="请再次输入密码"
-              v-model="changePasswordForm.newPassword2">
-            </el-input>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editForm.email"></el-input>
           </el-form-item>
         </el-form>
+        <!-- <span>需要注意的是内容是默认不居中的</span> -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialog = false">取 消</el-button>
+          <el-button type="primary" @click="editDialog = false">提 交</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog
+        title="更改密码"
+        :visible.sync="changePwdDialog"
+        width="50%"
+        center>
+        <!-- :validateField="validateFieldForm('oldPassword')" -->
+        <el-form
+          :model="changePasswordForm" 
+          status-icon 
+          :rules="changePasswordRules" 
+          ref="changpasswordRef" 
+          label-width="70px" 
+          label-position="left"
+          >
+            <el-form-item prop="oldPassword" label="原始密码">
+              <el-input
+                :autofocus="true"
+                placeholder="原始密码"
+                v-model="changePasswordForm.oldPassword">
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="newPassword1" label="新密码">
+              <el-input
+                :autofocus="true"
+                placeholder="请输入密码"
+                v-model="changePasswordForm.newPassword1">
+                <!-- <template slot="prepend"><i class="el-icon-info"></i></template> -->
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="newPassword2" label="确认密码">
+              <el-input
+                :autofocus="true"
+                placeholder="请再次输入密码"
+                v-model="changePasswordForm.newPassword2">
+              </el-input>
+            </el-form-item>
+          </el-form>
 
-      <!-- <span>需要注意的是内容是默认不居中的</span> -->
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="changePwdDialog = false">取 消</el-button>
-        <el-button type="primary" @click="changePwdDialog = false">确 定</el-button>
-      </span>
-    </el-dialog>
-  </el-menu>
+        <!-- <span>需要注意的是内容是默认不居中的</span> -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="changePwdDialog = false">取 消</el-button>
+          <el-button type="primary" @click="changePwdDialog = false">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import ErrorLog from '@/components/ErrorLog'
+import Screenfull from '@/components/Screenfull'
+import SizeSelect from '@/components/SizeSelect'
+import LangSelect from '@/components/LangSelect'
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    ErrorLog,
+    Screenfull,
+    SizeSelect,
+    LangSelect,
+    ThemePicker
+  },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+      'name',
+      'avatar',
+      'device'
+    ])
   },
   data () {
     var checkName = (rule, value, callback) => {
@@ -188,22 +228,17 @@ export default {
         newPassword2: [
           { validator: checkNewPassword2, trigger: 'blur' }
         ]
-      },
+      }
     }
   },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
-  },
+
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+      this.$store.dispatch('toggleSideBar')
     },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
     },
     edit() {
@@ -227,35 +262,53 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .screenfull {
-    position: absolute;
-    right: 90px;
-    top: 16px;
-    color: red;
+  .breadcrumb-container{
+    float: left;
   }
-  .avatar-container {
-    height: 50px;
+  .errLog-container {
     display: inline-block;
-    position: absolute;
-    right: 35px;
-    .avatar-wrapper {
-      cursor: pointer;
-      margin-top: 5px;
-      position: relative;
-      line-height: initial;
-      .user-avatar {
-        width: 35px;
-        height: 35px;
-        border-radius: 10px;
-      }
-      .el-icon-caret-bottom {
-        position: absolute;
-        right: -20px;
-        top: 15px;
-        font-size: 12px;
+    vertical-align: top;
+  }
+  .right-menu {
+    float: right;
+    height: 100%;
+    &:focus{
+     outline: none;
+    }
+    .right-menu-item {
+      display: inline-block;
+      margin: 0 8px;
+    }
+    .screenfull {
+      height: 20px;
+    }
+    .international{
+      vertical-align: top;
+    }
+    .theme-switch {
+      vertical-align: 15px;
+    }
+    .avatar-container {
+      height: 50px;
+      margin-right: 30px;
+      .avatar-wrapper {
+        margin-top: 5px;
+        position: relative;
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
       }
     }
   }
 }
 </style>
-
