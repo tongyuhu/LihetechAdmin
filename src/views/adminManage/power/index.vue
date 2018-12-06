@@ -1,20 +1,11 @@
 <template>
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
-      <!-- <div class="search-wrap">
-        <el-input placeholder="请输入医院名称/地址/管理员姓名/电话" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索医院</span>
-          <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
-        </el-input>
-      </div> -->
       <div class="button-wrap">
         <div>
           <el-button plain @click="addHandler">添加权限</el-button>
           <el-button plain @click="deleteHandle">批量删除</el-button>
         </div>
-        <!-- <div class="hospital-num">
-          <span>医院：共240</span>  
-        </div> -->
       </div>
       <div>
         <el-table
@@ -108,8 +99,13 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
+const roles = [ 'hospital','hospitalAdd','hospitalEdit','hospitaldEelete',
+                'user','userAdd','userEdit','userdEelete',
+                'message','messageEdit','messagedEelete',
+                'info','infoAdd','infoEdit','infodEelete',
+                'sys',
+                'admin','adminAdd','adminEdit','admindEelete']
 import edit from './edit'
 export default {
   name:'hospital',
