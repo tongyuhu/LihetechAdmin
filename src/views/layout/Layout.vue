@@ -4,7 +4,8 @@
     <sidebar class="sidebar-container"/>
     <div class="main-container">
       <navbar/>
-      <tags-view/>
+      <!-- 标签导航 -->
+      <!-- <tags-view/>  -->
       <app-main/>
     </div>
   </div>
