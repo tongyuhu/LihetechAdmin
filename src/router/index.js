@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/views/layout/Layout'
 import { Server } from 'tls';
-
+import components from './router'
+export const routerComponents = components
 /* Router Modules */
 
 
@@ -68,8 +68,8 @@ export const constantRouterMap = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+        name: 'dashboard',
+        meta: { title: '主页', icon: 'dashboard', noCache: true }
       }
     ]
   }
@@ -96,7 +96,7 @@ const ServerRouter = [
     meta: {
       title: '医院管理', 
       icon: 'hospital',
-      roles: []
+      roles: ['add','delete','edit']
     },
     children: [
       {
