@@ -5,8 +5,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/views/layout/Layout'
 import { Server } from 'tls';
-import components from './router'
-export const routerComponents = components
+// import components from './router'
+// export const routerComponents = components
 /* Router Modules */
 
 
@@ -359,3 +359,34 @@ export const asyncRouterMap = [
   },
   { path: '*', redirect: '/404', hidden: true }
 ]
+
+export const routerComponents ={
+  Layout:()=>import('@/views/redirect/index'),
+  Hospital:()=>import('@/views/hospitalManage/hospital/index'),
+  Doctor:()=>import('@/views/hospitalManage/doctor/index'),
+  userList:()=>import('@/views/userManage/user/index'),
+  bloodCover:()=>import('@/views/userManage/bloodCover/index'),
+  messageList:()=>import('@/views/messageManage/messageList/index'),
+  infoList:()=>import('@/views/infoManage/infoList/index'),
+  editInfo:()=>import('@/views/infoManage/infoList/edit/index'),
+  doctor:()=>import('@/views/sysLog/doctor/index'),
+  user:()=>import('@/views/sysLog/user/index'),
+  adminList:()=>import('@/views/adminManage/adminList/index'),
+  power:()=>import('@/views/adminManage/power/index'),
+  log:()=>import('@/views/adminManage/log/index')
+}
+// export const routerComponents ={
+//   Layout:require('@/views/redirect/index').default,
+//   Hospital:require('@/views/hospitalManage/hospital/index').default,
+//   Doctor:require('@/views/hospitalManage/doctor/index').default,
+//   userList:require('@/views/userManage/user/index').default,
+//   bloodCover:require('@/views/userManage/bloodCover/index').default,
+//   messageList:require('@/views/messageManage/messageList/index').default,
+//   infoList:require('@/views/infoManage/infoList/index').default,
+//   editInfo:require('@/views/infoManage/infoList/edit/index').default,
+//   doctor:require('@/views/sysLog/doctor/index').default,
+//   user:require('@/views/sysLog/user/index').default,
+//   adminList:require('@/views/adminManage/adminList/index').default,
+//   power:require('@/views/adminManage/power/index').default,
+//   log:require('@/views/adminManage/log/index').default
+// }

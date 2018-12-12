@@ -9,6 +9,7 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
+    router:[],
     introduction: '',
     roles: [],
     setting: {
@@ -40,6 +41,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ROUTER: (state, router) => {
+      state.router = router
     }
   },
 
@@ -70,6 +74,11 @@ const user = {
 
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
+          } else {
+            reject('getInfo: roles must be a non-null array !')
+          }
+          if (data.router && data.router.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROUTER', data.router)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
