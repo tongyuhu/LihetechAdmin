@@ -20,12 +20,13 @@ import './permission' // permission control
 import './mock' // simulation data
 
 import * as filters from './filters' // global filters
-
+import buttonPower from './utils/mixins/buttonPower'
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
 })
 
+Vue.mixin(buttonPower)
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

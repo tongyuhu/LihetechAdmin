@@ -70,7 +70,9 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="100">
+            width="100"
+            v-if="see_power"
+            >
               <template slot-scope="scope">
                 <el-button type="text" size="small" @click="addHandler">编辑</el-button>
               </template>
@@ -88,6 +90,9 @@
           </el-pagination>
         </div>
       </div>
+      <!-- <div v-edit="['roles']">
+        v-edit="roles"
+      </div> -->
     </el-card>
     <el-dialog 
     title="" 
@@ -160,6 +165,8 @@ export default {
       currentHospital:{}
     }
   },
+  computed:{
+  },
   created() {
   },
   methods: {
@@ -193,6 +200,9 @@ export default {
     deleteConfirmHandler(){
       this.deleteConfirm = false
     }
+  },
+  mounted(){
+    // console.log(this.$route.meta.roles)
   }
 }
 </script>

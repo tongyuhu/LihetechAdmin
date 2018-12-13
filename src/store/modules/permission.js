@@ -17,6 +17,7 @@ const ServerRouter = [
         component: 'Hospital',
         meta: { 
           title: '医院管理',
+          roles: ['add','delete','edit']
         }
       },
       {
@@ -25,9 +26,9 @@ const ServerRouter = [
         component: 'Doctor',
         meta: { 
           title: '医生管理',
+          roles: ['add','delete','edit']
         }
-      },
-      { path: '*', redirect: '/404', hidden: true }
+      }
     ]
   },
   {
@@ -136,8 +137,8 @@ const ServerRouter = [
       }
     ]
   },
-  // { path: '*', redirect: '/404', hidden: true }
-]  
+  { path: '*', redirect: '/404', hidden: true }
+] 
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配

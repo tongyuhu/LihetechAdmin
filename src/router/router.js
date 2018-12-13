@@ -1,3 +1,4 @@
+
 export default{
   Layout:()=>import('@/views/layout/Layout'),
   Hospital:()=>import('@/views/hospitalManage/hospital/index'),

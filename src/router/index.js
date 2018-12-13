@@ -96,7 +96,6 @@ const ServerRouter = [
     meta: {
       title: '医院管理', 
       icon: 'hospital',
-      roles: ['add','delete','edit']
     },
     children: [
       {
@@ -105,7 +104,7 @@ const ServerRouter = [
         component: 'Hospital',
         meta: { 
           title: '医院管理',
-          roles: []
+          roles: ['add','delete','edit']
         }
       },
       {
