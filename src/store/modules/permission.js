@@ -1,3 +1,4 @@
+import routerComponentsMap from '@/router/router'
 import { asyncRouterMap, constantRouterMap} from '@/router'
 const ServerRouter = [
   {
@@ -25,7 +26,8 @@ const ServerRouter = [
         meta: { 
           title: '医生管理',
         }
-      }
+      },
+      { path: '*', redirect: '/404', hidden: true }
     ]
   },
   {
@@ -137,34 +139,6 @@ const ServerRouter = [
   // { path: '*', redirect: '/404', hidden: true }
 ]  
 
-export const routerComponentsMap ={
-  Layout:()=>import('@/views/redirect/index'),
-  Hospital:()=>import('@/views/hospitalManage/hospital/index'),
-  Doctor:()=>import('@/views/hospitalManage/doctor/index'),
-  userList:()=>import('@/views/userManage/user/index'),
-  bloodCover:()=>import('@/views/userManage/bloodCover/index'),
-  messageList:()=>import('@/views/messageManage/messageList/index'),
-  infoList:()=>import('@/views/infoManage/infoList/index'),
-  editInfo:()=>import('@/views/infoManage/infoList/edit/index'),
-  doctor:()=>import('@/views/sysLog/doctor/index'),
-  user:()=>import('@/views/sysLog/user/index'),
-  adminList:()=>import('@/views/adminManage/adminList/index'),
-  power:()=>import('@/views/adminManage/power/index'),
-  log:()=>import('@/views/adminManage/log/index')
-  // Layout:require('@/views/redirect/index').default,
-  // Hospital:require('@/views/hospitalManage/hospital/index').default,
-  // Doctor:require('@/views/hospitalManage/doctor/index').default,
-  // userList:require('@/views/userManage/user/index').default,
-  // bloodCover:require('@/views/userManage/bloodCover/index').default,
-  // messageList:require('@/views/messageManage/messageList/index').default,
-  // infoList:require('@/views/infoManage/infoList/index').default,
-  // editInfo:require('@/views/infoManage/infoList/edit/index').default,
-  // doctor:require('@/views/sysLog/doctor/index').default,
-  // user:require('@/views/sysLog/user/index').default,
-  // adminList:require('@/views/adminManage/adminList/index').default,
-  // power:require('@/views/adminManage/power/index').default,
-  // log:require('@/views/adminManage/log/index').default
-}
 /**
  * 通过meta.role判断是否与当前用户权限匹配
  * @param roles
@@ -199,25 +173,25 @@ function filterAsyncRouter(routes, roles) {
   return res
 }
 /**
- * 递归过滤异步路由表，返回符合用户角色权限的路由表
+ * 递归过滤异步路由表，返回符合用户的路由表
  * @param routes asyncRouterMap
  * @param srverRouter
  */
-function filterSrverRouter(srverRouter,asyncRouterMap) {
-  let routers = srverRouter
-  routers.forEach(route => {
-
+function filterSrverRouter(srverRouter) {
+  // let routers = srverRouter
+  const res = []
+  srverRouter.forEach(route => {
     if(route.component){
       route.component = routerComponentsMap[route.component]
-      // console.log('routername',route.component)
     }
+    const tmp = { ...route }
     if(route.children){
       route.children = filterSrverRouter(route.children)
     }
+    res.push(tmp)
     
   })
-
-  return routers
+  return res
 }
 
 const permission = {
@@ -237,15 +211,13 @@ const permission = {
         const { roles } = data
         let accessedRouters
         accessedRouters = filterSrverRouter(ServerRouter)
-        // commit('SET_ROUTERS', accessedRouters)
-        console.log('luyou',accessedRouters)
-        console.log('luyou',asyncRouterMap)
+        commit('SET_ROUTERS', accessedRouters)
         // if (roles.includes('admin')) {
         //   accessedRouters = asyncRouterMap
         // } else {
         //   accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         // }
-        commit('SET_ROUTERS', accessedRouters)
+        // commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
     }
