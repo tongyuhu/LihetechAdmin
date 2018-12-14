@@ -6,6 +6,11 @@
 
 <script>
 export default{
-  name: 'App'
+  name: 'App',
+  created () {
+    // this.$router.push({path:'/'})
+    console.log(this.$router)
+    
+  }
 }
 </script>

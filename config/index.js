@@ -9,13 +9,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api': {
+        target: 'http://192.168.2.131:8088/operat/', // 本地环境
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'  //用'/api'代替target里面的地址
+                
+        }
+      }
+    },
 
     // Various Dev Server settings
 
     // can be overwritten by process.env.HOST
     // if you want dev by ip, please set host: '0.0.0.0'
-    host: 'localhost',
+    // host: 'localhost',
+    host: '10.7.6.58',
     port: 9527, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,

@@ -1,15 +1,18 @@
+import { isArray } from "util";
+
 const power = {
   computed: {
     roles_power(){
-      if(this.$route){
-        if(this.$route.hasOwnProperty('meta')){
-          if(this.$route.meta.hasOwnProperty('roles')){
-            return this.$route.meta.roles
-          }
-        }
-      }else{
-        return []
+      let roles
+      try {
+        roles = this.$route.meta.roles.map(item=>{
+          return item.replace(/^\w*:/,'')
+        })
       }
+      catch(err) {
+        roles= []
+      }
+      return roles
     },
     edit_power(){
       return this.roles_power.includes('edit')
@@ -23,6 +26,9 @@ const power = {
     see_power(){
       return this.roles_power.includes('see')
     },
+  },
+  mounted () {
+    console.log('btnpower',this.roles_power)
   }
 }
 export default power

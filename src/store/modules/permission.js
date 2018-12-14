@@ -185,6 +185,12 @@ function filterSrverRouter(srverRouter) {
     if(route.component){
       route.component = routerComponentsMap[route.component]
     }
+    if(route.redirect == null){
+      delete route.redirect
+    }
+    if(route.children == null){
+      delete route.children
+    }
     const tmp = { ...route }
     if(route.children){
       route.children = filterSrverRouter(route.children)
@@ -209,10 +215,12 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
-        const { roles } = data
+        // const { roles } = data
         let accessedRouters
-        accessedRouters = filterSrverRouter(ServerRouter)
+        // accessedRouters = filterSrverRouter(ServerRouter)
+        accessedRouters = filterSrverRouter(data)
         commit('SET_ROUTERS', accessedRouters)
+        console.log('accessedRouters',accessedRouters)
         // if (roles.includes('admin')) {
         //   accessedRouters = asyncRouterMap
         // } else {

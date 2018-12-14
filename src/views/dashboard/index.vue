@@ -23,9 +23,12 @@ export default {
     ])
   },
   created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'editorDashboard'
-    }
+    // if (!this.roles.includes('admin')) {
+      this.currentRole = 'adminDashboard'
+    // }
+    // this.$store.dispatch('LoginByUsername')
+    // this.$store.dispatch('GetUserRouter')
+    // this.$store.dispatch('ChangeRoles')
   }
 }
 </script>

@@ -30,38 +30,7 @@ import { Server } from 'tls';
 **/
 export const constantRouterMap = [
   {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/authredirect'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/errorPage/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/errorPage/401'),
-    hidden: true
-  },
-  {
-    path: '',
+    path: '/',
     component: Layout,
     redirect: 'dashboard',
     children: [
@@ -72,7 +41,39 @@ export const constantRouterMap = [
         meta: { title: '主页', icon: 'dashboard', noCache: true }
       }
     ]
-  }
+  },
+  // {
+  //   path: '/redirect',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: '/redirect/:path*',
+  //       component: () => import('@/views/redirect/index')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/login',
+  //   component: () => import('@/views/login/index'),
+  //   hidden: true
+  // },
+  // {
+  //   path: '/auth-redirect',
+  //   component: () => import('@/views/login/authredirect'),
+  //   hidden: true
+  // },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/errorPage/401'),
+    hidden: true
+  },
+  
 ]
 
 export default new Router({
@@ -80,12 +81,6 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
-const roles = [ 'hospital','hospitalAdd','hospitalEdit','hospitaldEelete',
-                'user','userAdd','userEdit','userdEelete',
-                'message','messageEdit','messagedEelete',
-                'info','infoAdd','infoEdit','infodEelete',
-                'sys',
-                'manager','managerAdd','managerEdit','managerdEelete']
 
 const ServerRouter = [
   {

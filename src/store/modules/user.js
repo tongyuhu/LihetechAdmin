@@ -1,4 +1,4 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { loginByUsername, logout, getUserInfo ,getRouter} from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -50,16 +50,26 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      // const username = userInfo.username.trim()
+      // return new Promise((resolve, reject) => {
+      //   loginByUsername('admin', '123456').then(response => {
+      //     // const data = response.data
+      //     // commit('SET_TOKEN', data.token)
+      //     // setToken(response.data.token)
+      //     resolve()
+      //   }).catch(error => {
+      //     reject(error)
+      //   })
+      // })
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+        // loginByUsername('admin', '123456').then(response => {
+          // const data = response.data
+          // commit('SET_TOKEN', data.token)
+          // setToken(response.data.token)
           resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        // }).catch(error => {
+        //   reject(error)
+        // })
       })
     },
 
@@ -92,7 +102,24 @@ const user = {
         })
       })
     },
-
+    GetUserRouter({ commit , state }){
+      return new Promise((resolve,reject) => {
+        getRouter().then(res => {
+          let data
+          if(res.code === '0000' && Array.isArray(res.data)){
+            data = res.data
+          }else{
+            data = [{ path: '*', redirect: '/404', hidden: true }]
+            // commit('SET_ROUTER',[{ path: '*', redirect: '/404', hidden: true }])
+          }
+          commit('SET_ROUTER',data)
+          console.log('请求用户路由',res.data)
+          resolve(data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 第三方验证登录
     // LoginByThirdparty({ commit, state }, code) {
     //   return new Promise((resolve, reject) => {
@@ -110,7 +137,7 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
@@ -133,15 +160,27 @@ const user = {
     // 动态修改权限
     ChangeRoles({ commit, dispatch }, role) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', role)
-        setToken(role)
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
+        // commit('SET_TOKEN', role)
+        // setToken(role)
+        // getUserInfo(role).then(response => {
+        //   const data = response.data
+        //   commit('SET_ROLES', data.roles)
+        //   commit('SET_NAME', data.name)
+        //   commit('SET_AVATAR', data.avatar)
+        //   commit('SET_INTRODUCTION', data.introduction)
+        //   dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
+        //   resolve()
+        // })
+        getRouter().then(res=>{
+          let data
+          if(res.code === '0000' && Array.isArray(res.data)){
+            data = res.data
+          }else{
+            data = [{ path: '*', redirect: '/404', hidden: true }]
+          }
+          commit('SET_ROUTER',data)
+          dispatch('GenerateRoutes', data)
+          console.log('执行ChangeRoles',data)
           resolve()
         })
       })
