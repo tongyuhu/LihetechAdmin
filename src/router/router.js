@@ -12,5 +12,6 @@ export default{
   user:()=>import('@/views/sysLog/user/index'),
   adminList:()=>import('@/views/adminManage/adminList/index'),
   power:()=>import('@/views/adminManage/power/index'),
+  role:()=>import('@/views/adminManage/roles/index'),
   log:()=>import('@/views/adminManage/log/index')
 }

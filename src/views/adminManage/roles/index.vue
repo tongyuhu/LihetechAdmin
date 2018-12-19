@@ -1,19 +1,10 @@
 <template>
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
-      <div class="search-wrap">
-        <el-input placeholder="请输入用户名称/电话/邮箱/绑定医生姓名" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索用户</span>
-          <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
-        </el-input>
-      </div>
       <div class="button-wrap">
         <div>
-          <!-- <el-button plain @click="editHandler">添加医院</el-button> -->
+          <el-button plain @click="addHandler">添加权限</el-button>
           <el-button plain @click="deleteHandle">批量删除</el-button>
-        </div>
-        <div class="hospital-num">
-          <span>用户：共240</span>  
         </div>
       </div>
       <div>
@@ -24,61 +15,55 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
-            type="selection"
-            width="55">
+            width="50"
+            type="expand">
+            <template slot-scope="scope">
+              <!-- {{ scope.row.hospitalName }} -->
+              <!-- <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit> -->
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="realName"
-            label="用户姓名"
+          <!-- <el-table-column
+            prop="address"
+            label="医院地址"
             width="120">
-            <template slot-scope="scope">{{ scope.row.realName ||scope.row.nickName|| ''}}</template>
           </el-table-column>
           <el-table-column
-            prop="mobile"
+            prop="admin"
+            label="管理员"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="phone"
             label="联系电话"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="sex"
-            label="性别"
             show-overflow-tooltip>
-            <template slot-scope="scope">{{ scope.row.sex|sex}}</template>
-          </el-table-column>
-          <el-table-column
-            prop="bloodPressureType"
-            label="高血压类型"
-            show-overflow-tooltip>
-            <template slot-scope="scope">{{ scope.row.bloodPressureType|bloodPressureType}}</template>
           </el-table-column>
           <el-table-column
             prop="email"
-            label="绑定医生姓名"
+            label="邮箱"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="joinHospitalTime"
-            label="加入时间"
+            prop="doctorAccount"
+            label="医生账号"
             show-overflow-tooltip>
-            <template slot-scope="scope">{{ scope.row.joinHospitalTime|joinTime}}</template>
           </el-table-column>
-          <!-- <el-table-column
+          <el-table-column
             prop="jionTime"
             label="加入时间"
             show-overflow-tooltip>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column
-            prop="isStop"
+            prop="status"
             label="账号状态"
             show-overflow-tooltip>
-            <template slot-scope="scope">{{ scope.row.isStop|isStop}}</template>
           </el-table-column>
           <el-table-column
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="editHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
               </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
         <div class="page-wrap">
           <el-pagination
@@ -112,10 +97,14 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
+const roles = [ 'hospital','hospitalAdd','hospitalEdit','hospitaldEelete',
+                'user','userAdd','userEdit','userdEelete',
+                'message','messageEdit','messagedEelete',
+                'info','infoAdd','infoEdit','infodEelete',
+                'sys',
+                'admin','adminAdd','adminEdit','admindEelete']
 import edit from './edit'
-import {userList} from '@/api/userManage'
 export default {
   name:'hospital',
   components:{
@@ -159,14 +148,13 @@ export default {
       ],
       multipleSelection: [],
       currentPage:1,
-      pageSize:10,
+      pageSize:1,
       pageTotal:40,
       deleteConfirm:false,
       currentHospital:{}
     }
   },
   created() {
-    this.getData()
   },
   methods: {
     handleSelectionChange(val) {
@@ -174,13 +162,12 @@ export default {
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
-      this.pageSize = val
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
     searchHandler(){},
-    editHandler(){
+    addHandler(){
       this.editDialog=true
     },
     deleteHandle(){
@@ -200,19 +187,7 @@ export default {
       this.deleteConfirm = false
     },
     getData(){
-      let vm = this
-      let params = {
-        pageNum: this.currentPage,
-        pageSize: this.pageSize
-      }
-      userList(params).then((res)=>{
-        if(res.code === '0000') {
-          if(res.data.length>0){
-            vm.tableData = res.data
-          }
-        }
-        console.log(res,'用户列表')
-      })
+
     }
   }
 }

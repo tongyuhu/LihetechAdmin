@@ -1,8 +1,18 @@
 <template>
   <div class="gap-top">
     <!-- <el-card> -->
-      <div class="title">
-        用户血压分布
+      <div class="head-box">
+        <span class="title">
+          用户血压分布
+        </span>
+        <div class="check-time">
+          <el-radio-group v-model="time" size="small" @change="checkTime">
+            <el-radio-button label="天"></el-radio-button>
+            <el-radio-button label="周"></el-radio-button>
+            <el-radio-button label="月"></el-radio-button>
+            <el-radio-button label="年"></el-radio-button>
+          </el-radio-group>
+        </div>
       </div>
       <div id="bloodCover" :style="{width:'auto',height:'500px'}"></div>
     <!-- </el-card> -->
@@ -13,12 +23,15 @@
 import echarts from 'echarts'
 import { debounce } from '@/utils'
 import resize from '@/utils/mixins/resize'
+import {bloodCover} from '@/api/userManage'
 export default {
   name:'bloodCover',
   mixins: [resize],
   data () {
     return {
       chart:null,
+      chartData:[],
+      time:'天'
     }
   },
   methods: {
@@ -32,7 +45,9 @@ export default {
       this.chart.setOption(this.chartOption())
     },
     chartOption(){
+      let vm = this
       let option = {
+        stillShowZeroSum:false,
         tooltip: { // 提示框组件
           backgroundColor: 'rgba(50,50,50,0.2)',
           triggerOn: 'mousemove|click',
@@ -80,36 +95,15 @@ export default {
             type: 'pie',
             radius: '70%',
             center: ['50%', '40%'],
-            data: [
-              {
-                value:0.1,
-                name:'正常',
-              },
-              {
-                value:0.2,
-                name:'正常高压',
-              },
-              {
-                value:0.3,
-                name:'中度高血压',
-              },
-              {
-                value:0.1,
-                name:'轻度高血压',
-              },
-              {
-                value:0.3,
-                name:'危险',
-              }
-            ],
+            data: vm.chartData,
             label: {
               normal: {
-                position: 'inner',
+                position: 'outside',
                 formatter: function (params) {
-                  if (params.value === 0) {
-                    return ''
+                  if (params.value === 1) {
+                    return params.name +'  '+ params.value + '人'
                   } else {
-                    return params.percent + '%'
+                    return params.name +'  '+ params.value + '人'
                   }
                 },
                 fontSize: 10
@@ -121,13 +115,69 @@ export default {
               }
             }
           }
-        ],
+        ]
+        
       }
       return option
+    },
+    getData(params){
+      // let params = {
+      //   periodTime: 1
+      //   } 
+      bloodCover(params).then(res=>{
+        if(res.code = '0000'){
+          this.chartData = [
+              {
+                value:res.data.normalCount,
+                name:'正常',
+              },
+              {
+                // value:11,
+                value:res.data.normalHighCount,
+                name:'正常高压',
+              },
+              {
+                value:res.data.moderateHighCount,
+                name:'中度高血压',
+              },
+              {
+                value:res.data.mildHighCount,
+                name:'轻度高血压',
+              },
+              {
+                value:res.data.dangerCount,
+                name:'危险',
+              }
+            ]
+        }
+        console.log(this.chartData,'血压分布数据')
+        this.initChart()
+      })
+    },
+    checkTime(){
+      let params = {
+        periodTime: 1
+        } 
+      switch(this.time){
+        case '天':
+        params.periodTime = 1
+        break
+        case '周':
+        params.periodTime = 2
+        break
+        case '月':
+        params.periodTime = 3
+        break
+        case '年':
+        params.periodTime = 4
+        break
+      }
+    this.getData(params)
     }
   },
   mounted(){
     this.initChart()
+    this.checkTime()
   },
   beforeDestroy() {
   }
@@ -136,11 +186,20 @@ export default {
 <style lang="scss" scoped>
   .title{
     margin-top:10px;
-    margin-left:30px;
+    margin-bottom:10px;
+    margin-left:40px;
     font-size: 24px;
   }
   .gap-top{
     margin-top:20px;
+  }
+  .head-box{
+    display: flex;
+    align-items: center;
+    margin-bottom:30px;
+  }
+  .check-time{
+    margin-left: 20px;
   }
 </style>
 

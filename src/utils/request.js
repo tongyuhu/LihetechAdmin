@@ -19,6 +19,7 @@ service.interceptors.request.use(
       config.headers['xhrFields'] ={ withCredentials: true  }
       config.headers['crossDomain'] = true
       config.headers['Access-Control-Allow-Origin'] = '*'
+      
     // }
     if (config.method === 'post') {
       config.data = qs.stringify(config.data)

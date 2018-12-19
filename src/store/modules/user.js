@@ -1,6 +1,6 @@
 import { loginByUsername, logout, getUserInfo ,getRouter} from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-
+import request from '@/utils/request'
 const user = {
   state: {
     user: '',
@@ -62,14 +62,15 @@ const user = {
       //   })
       // })
       return new Promise((resolve, reject) => {
-        // loginByUsername('admin', '123456').then(response => {
-          // const data = response.data
-          // commit('SET_TOKEN', data.token)
-          // setToken(response.data.token)
+        loginByUsername('admin', '123456').then(response => {
+          const data = response.data
+          commit('SET_TOKEN', data)
+          setToken(response.data)
+          request.defaults.headers['Token'] = response.data
           resolve()
-        // }).catch(error => {
-        //   reject(error)
-        // })
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
 
@@ -108,6 +109,7 @@ const user = {
           let data
           if(res.code === '0000' && Array.isArray(res.data)){
             data = res.data
+            data.push({ path: '*', redirect: '/404', hidden: true })
           }else{
             data = [{ path: '*', redirect: '/404', hidden: true }]
             // commit('SET_ROUTER',[{ path: '*', redirect: '/404', hidden: true }])

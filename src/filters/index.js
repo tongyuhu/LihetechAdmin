@@ -40,3 +40,55 @@ export function numberFormatter(num, digits) {
 export function toThousandFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
+export function sex(sex) {
+  if(sex){
+    sex = '男'
+  }else{
+    sex = '女'
+  }
+  return sex
+}
+export function bloodPressureType(type) {
+  switch (type) {
+    case 0:
+      type = '未知 '
+      break;
+    case 1:
+      type = '1级高血压 '
+      break;
+    case 2:
+      type = '2级高血压 '
+      break;
+    case 3:
+      type = '3级高血压 '
+      break;
+    case 4:
+      type = '正常 '
+      break;
+    case 5:
+      type = '正常高值 '
+      break;
+    case 6:
+      type = '低压 '
+      break;
+  
+    default:
+    type = '未知 '
+      break;
+  }
+  return type
+}
+export function joinTime(time) {
+  if(time){
+    return time.substring(0,10)
+  }else{
+    return time
+  }
+}
+export function isStop(stauts) {
+  if(!stauts){
+    return '停用'
+  }else if(stauts){
+    return '开启'
+  }
+}

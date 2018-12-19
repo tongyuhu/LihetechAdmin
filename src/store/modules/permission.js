@@ -174,12 +174,11 @@ function filterAsyncRouter(routes, roles) {
   return res
 }
 /**
- * 递归过滤异步路由表，返回符合用户的路由表
+ * 递归过滤后台返回的路由表，返回符合用户的路由表
  * @param routes asyncRouterMap
  * @param srverRouter
  */
 function filterSrverRouter(srverRouter) {
-  // let routers = srverRouter
   const res = []
   srverRouter.forEach(route => {
     if(route.component){
@@ -191,8 +190,28 @@ function filterSrverRouter(srverRouter) {
     if(route.children == null){
       delete route.children
     }
+    // if(route.meta.icon == null){
+    //   delete route.icon
+    // }
+    // if(route.meta.roles == null){
+    //   delete route.meta.roles
+    // }
+    // 有资讯列表的路由添加 编辑侧边栏不可见
+    if(route.name == 'infoManage'){
+      route.children.push({
+        path: 'editInfo',
+        name: 'editInfo',
+        hidden: true,
+        component: 'editInfo',
+        meta: { title: '编辑资讯',noCache: true }
+      })
+    }
     const tmp = { ...route }
-    if(route.children){
+    if( Array.isArray(route.children) && route.children.length > 0){
+      // 去除子路由path的/
+      route.children.forEach(item=>{
+        item.path = item.path.replace(/^\/*/,'')
+      })
       route.children = filterSrverRouter(route.children)
     }
     res.push(tmp)

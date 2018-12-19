@@ -27,8 +27,8 @@ const power = {
       return this.roles_power.includes('see')
     },
   },
-  mounted () {
-    console.log('btnpower',this.roles_power)
-  }
+  // mounted () {
+  //   console.log('btnpower',this.roles_power)
+  // }
 }
 export default power

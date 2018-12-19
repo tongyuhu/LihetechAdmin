@@ -9,8 +9,8 @@ export default{
   name: 'App',
   created () {
     // this.$router.push({path:'/'})
-    console.log(this.$router)
-    
+    // console.log(this.$router)
+    this.$store.dispatch('LoginByUsername')
   }
 }
 </script>
