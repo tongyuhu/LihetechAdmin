@@ -1,37 +1,25 @@
 <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%">
-    <el-table-column
-      label="权限名称"
-      width="180"
-      prop="role">
-    </el-table-column>
-    <el-table-column
-      label="查看">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.see"></el-checkbox>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="添加">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.add"></el-checkbox>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="修改">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.edit"></el-checkbox>
-      </template>
-    </el-table-column>
-    <el-table-column
-      label="删除">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.delete"></el-checkbox>
-      </template>
-    </el-table-column>
-  </el-table>
+<div class="box">
+  <el-form ref="form" :model="tableData" label-width="120px" size="mini">
+    <el-form-item label="角色名称">
+      <el-input v-model="tableData.roleName"></el-input>
+    </el-form-item>
+    <el-form-item label="权限id集合,分割">
+      <el-input v-model="tableData.authsId"></el-input>
+    </el-form-item>
+    <el-form-item label="描述">
+      <el-input v-model="tableData.description"></el-input>
+    </el-form-item>
+    <el-form-item label="角色码">
+      <el-input v-model="tableData.roleCode"></el-input>
+    </el-form-item>
+    
+    
+    <el-form-item size="mini">
+      <el-button type="primary" @click="update">{{action}}</el-button>
+    </el-form-item>
+  </el-form>
+</div>
 </template>
 
 <script>
@@ -39,66 +27,34 @@
     name:'edit',
     props:{
       defaultData:{
-        type:Object
+        type:Object,
+        default:()=>{return {}}
+      },
+      action:{
+        type:String
       }
     },
     data() {
       
       return {
-        tableData: [
-          {
-            role:'医院管理',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-          {
-            role:'用户管理',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-          {
-            role:'消息管理',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-          {
-            role:'资讯管理',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-          {
-            role:'系统日志',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-          {
-            role:'管理员管理',
-            see:true,
-            add:false,
-            edit:true,
-            delete:true
-          },
-        ]
+        tableData: this.defaultData,
+        text:'更新'
       }
     },
+    created () {
+      this.$set(this.$data,'tableData',this.defaultData)
+    },
     methods: {
-      
+      update(){
+        this.$emit('edit',this.tableData)
+        // console.log(this.tableData,'tinajiadeliria')
+      }
     }
   }
 </script>
 <style lang="scss" scoped>
-  .action-btn{
-    text-align: center;
+  .box{
+    margin: 20px 30px 20px 10px;
   }
 </style>
 

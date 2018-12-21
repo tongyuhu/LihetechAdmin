@@ -3,8 +3,7 @@
     <el-card :body-style="{'padding':'20px'}">
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler">添加权限</el-button>
-          <el-button plain @click="deleteHandle">批量删除</el-button>
+          <el-button plain @click="addHandler('add')">添加角色</el-button>
         </div>
       </div>
       <div>
@@ -13,98 +12,65 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          >
           <el-table-column
-            width="50"
-            type="expand">
-            <template slot-scope="scope">
-              <!-- {{ scope.row.hospitalName }} -->
-              <!-- <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit> -->
-            </template>
-          </el-table-column>
-          <!-- <el-table-column
-            prop="address"
-            label="医院地址"
+            prop="roleName"
+            label="角色名称"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="admin"
-            label="管理员"
+            prop="roleCode"
+            label="角色码"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="phone"
-            label="联系电话"
+            prop="description"
+            label="描述"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="email"
-            label="邮箱"
+            prop="authsId"
+            label="权限id集合"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="doctorAccount"
-            label="医生账号"
+            prop="createTime"
+            label="创建时间"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.createTime | joinTime}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="jionTime"
-            label="加入时间"
+            prop="modifyTime"
+            label="更新时间"
             show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="账号状态"
-            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.modifyTime | joinTime}}</span>
+            </template>
           </el-table-column>
           <el-table-column
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler('update',scope.row)">更新</el-button>
               </template>
-          </el-table-column> -->
+          </el-table-column>
         </el-table>
-        <div class="page-wrap">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="10"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="pageTotal">
-          </el-pagination>
-        </div>
       </div>
     </el-card>
     <el-dialog 
     title="" 
-    :visible.sync="editDialog" 
+    :visible.sync="editDialog"
     width="70%">
-      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
-    </el-dialog>
-    <el-dialog 
-    title="" 
-    :visible.sync="deleteConfirm" 
-    width="50%"
-    center
-    >
-    <div class="center-text">
-      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
-      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
-    </div>
+      <edit v-if="editDialog" @edit="editHanler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>
 </template>
 <script>
-const roles = [ 'hospital','hospitalAdd','hospitalEdit','hospitaldEelete',
-                'user','userAdd','userEdit','userdEelete',
-                'message','messageEdit','messagedEelete',
-                'info','infoAdd','infoEdit','infodEelete',
-                'sys',
-                'admin','adminAdd','adminEdit','admindEelete']
+
 import edit from './edit'
+import {roleList,roleAdd,roleUpdate} from '@/api/adminManage.js'
 export default {
   name:'hospital',
   components:{
@@ -112,82 +78,82 @@ export default {
   },
   data() {
     return {
-      searchData:'',
       editDialog:false,
-      tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
-      ],
-      multipleSelection: [],
-      currentPage:1,
-      pageSize:1,
-      pageTotal:40,
-      deleteConfirm:false,
-      currentHospital:{}
+      tableData:[],
+      currentEdit:{},
+      action:'更新'
     }
   },
   created() {
+    this.getData()
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    searchHandler(){},
-    addHandler(){
+    addHandler(action,role){
+      if(action==='add'){
+        this.action = '添加'
+        this.currentEdit = {
+          roleName:null,
+          authsId:null,
+          description:null,
+          roleCode:null
+        }
+      }
+      if(action==='update'){
+        this.action = '更新'
+        this.currentEdit = role
+      }
       this.editDialog=true
     },
-    deleteHandle(){
-      if(this.multipleSelection.length>0){
-        this.deleteConfirm = true
-      }else{
-        this.$message({
-          message: '请选择医院',
-          type: 'warning'
-        });
-      }
-    },
-    closeHospitalDialog(){
-      this.editDialog = false
-    },
-    deleteConfirmHandler(){
-      this.deleteConfirm = false
-    },
     getData(){
+      roleList().then(res=>{
+        if(res.code === '0000'){
 
+          this.tableData = res.data
+        }
+      })
+    },
+    editHanler(role){
+      let vm = this
+      if(this.action==='添加'){
+        console.log('add',role)
+        roleAdd(role).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.push(role)
+            vm.$message({
+              message: '添加成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: '添加失败',
+              type: 'error'
+            })
+          }
+        })
+      }
+      if(this.action==='更新'){
+        roleUpdate(role).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.forEach((item,index)=>{
+              if(item.id === role.id){
+                this.tableData.splice(index,1,role)
+              }
+            })
+            vm.$message({
+              message: '更新成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: '更新失败',
+              type: 'error'
+            })
+          }
+        })
+        
+        // this.tableData.push(role)
+        console.log('update',role)
+      }
     }
   }
 }

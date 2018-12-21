@@ -2,18 +2,14 @@
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
-        <el-input placeholder=" 输入用户名称、电话、邮箱、绑定医生姓名" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜素查询</span>
+        <el-input placeholder="输入用户名称、电话、邮箱、绑定医生姓名" v-model="searchData" class="input-with-select">
+          <span slot="prepend">搜索查询</span>
           <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler">添加管理员</el-button>
-          <el-button plain @click="deleteHandle">批量删除</el-button>
-        </div>
-        <div class="hospital-num">
-          <span>医院：共240</span>  
+          <el-button plain @click="addHandler('add')">添加角色</el-button>
         </div>
       </div>
       <div>
@@ -22,57 +18,131 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          >
+          
           <el-table-column
-            type="selection"
-            width="55">
+            type="expand">
+            <template slot-scope="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="证件号码">
+                  <span>{{ props.row.idCardNo }}</span>
+                </el-form-item>
+                <el-form-item label="最后登录IP">
+                  <span>{{ props.row.loginIp }}</span>
+                </el-form-item>
+                <el-form-item label="最后登录日期">
+                  <span>{{ props.row.loginDate }}</span>
+                </el-form-item>
+                <el-form-item label="角色id集合">
+                  <span>{{ props.row.rolesId }}</span>
+                </el-form-item>
+                <el-form-item label="最后修改人员id">
+                  <span>{{ props.row.operatId }}</span>
+                </el-form-item>
+                <el-form-item label="版本号">
+                  <span>{{ props.row.version }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="hospitalName"
-            label="管理员姓名"
-            width="120">
-            <template slot-scope="scope">{{ scope.row.hospitalName }}</template>
+            prop="username"
+            label="用户名">
           </el-table-column>
           <el-table-column
-            prop="address"
-            label="联系电话"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="admin"
-            label="邮箱"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="phone"
-            label="管理员类型"
+            prop="mobile"
+            label="电话"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="email"
-            label="加入时间"
+            label="邮箱"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="doctorAccount"
-            label="账号状态"
+            prop="name"
+            label="用户姓名"
             show-overflow-tooltip>
           </el-table-column>
           <!-- <el-table-column
-            prop="jionTime"
-            label="加入时间"
+            prop="idCardNo"
+            label="证件号码"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <!-- <el-table-column
+            prop="password"
+            label="密码"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <el-table-column
+            prop="sex"
+            label="性别"
+            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.sex | sex}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="是否启用"
+            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.enabled === true ? "是":'否'}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="是否锁定"
+            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.locked === true ? "是":'否'}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="loginFailureCount"
+            label="连续登录失败次数"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="status"
-            label="账号状态"
+            prop="lockedDate"
+            label="锁定日期"
+            show-overflow-tooltip>
+          </el-table-column>
+          <!-- <el-table-column
+            prop="loginIp"
+            label="最后登录IP"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <!-- <el-table-column
+            prop="loginDate"
+            label="最后登录日期"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <el-table-column
+            label="是否停用"
+            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.isStop === true ? "是":'否'}}</span>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column
+            prop="rolesId"
+            label="角色id集合"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <!-- <el-table-column
+            prop="operatId"
+            label="最后修改人员id"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <!-- <el-table-column
+            prop="version"
+            label="版本号"
             show-overflow-tooltip>
           </el-table-column> -->
           <el-table-column
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler('update',scope.row)">更新</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -91,26 +161,16 @@
     </el-card>
     <el-dialog 
     title="" 
-    :visible.sync="editDialog" 
+    :visible.sync="editDialog"
     width="70%">
-      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
-    </el-dialog>
-    <el-dialog 
-    title="" 
-    :visible.sync="deleteConfirm" 
-    width="50%"
-    center
-    >
-    <div class="center-text">
-      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
-      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
-    </div>
+      <edit v-if="editDialog" @edit="editHanler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>
 </template>
-
 <script>
+
 import edit from './edit'
+import {adminList,adminUpdate,adminAdd} from '@/api/adminManage.js'
 export default {
   name:'hospital',
   components:{
@@ -118,82 +178,112 @@ export default {
   },
   data() {
     return {
-      searchData:'',
       editDialog:false,
-      tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
-      ],
-      multipleSelection: [],
+      tableData:[],
+      currentEdit:{},
+      action:'更新',
+      searchData:'',
       currentPage:1,
-      pageSize:1,
+      pageSize:10,
       pageTotal:40,
-      deleteConfirm:false,
-      currentHospital:{}
     }
   },
   created() {
+    this.getData({
+      pageNum:this.currentPage,
+      pageSize:this.pageSize,
+    })
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    addHandler(action,admin){
+      if(action==='add'){
+        this.action = '添加'
+        this.currentEdit = {
+          // roleName:null,
+          // authsId:null,
+          // description:null,
+          // roleCode:null
+        }
+      }
+      if(action==='update'){
+        this.action = '更新'
+        this.currentEdit = admin
+      }
+      this.editDialog=true
+    },
+    getData(params){
+      adminList(params).then(res=>{
+        if(res.code === '0000'){
+          this.tableData = res.data
+          this.pageTotal = res.recordCount
+        }
+      })
+    },
+    editHanler(admin){
+      let vm = this
+      if(this.action==='添加'){
+        console.log('add',admin)
+        adminAdd(admin).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.unshift(admin)
+            vm.$message({
+              message: '添加成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+      }
+      if(this.action==='更新'){
+        adminUpdate(admin).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.forEach((item,index)=>{
+              if(item.id === admin.id){
+                this.tableData.splice(index,1,admin)
+              }
+            })
+            vm.$message({
+              message: '更新成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        
+        // this.tableData.push(admin)
+        console.log('update',admin)
+      }
     },
     handleSizeChange(val) {
+      this.pageSize = val
+      this.getData({
+        pageSize:val,
+        pageNum:1
+      })
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val
+      this.getData({
+        pageSize:this.pageSize,
+        pageNum:val
+      })
       console.log(`当前页: ${val}`);
     },
-    searchHandler(){},
-    addHandler(){
-      this.editDialog=true
-    },
-    deleteHandle(){
-      if(this.multipleSelection.length>0){
-        this.deleteConfirm = true
-      }else{
-        this.$message({
-          message: '请选择医院',
-          type: 'warning'
-        });
-      }
-    },
-    closeHospitalDialog(){
-      this.editDialog = false
-    },
-    deleteConfirmHandler(){
-      this.deleteConfirm = false
-    },
-    getData(){
-
+    searchHandler(){
+      this.getData({
+        pageSize:this.pageSize,
+        pageNum:1,
+        fields:this.searchData
+      })
     }
   }
 }
@@ -219,5 +309,17 @@ export default {
   }
   .center-text{
     text-align: center;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>

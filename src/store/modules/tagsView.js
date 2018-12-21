@@ -1,7 +1,7 @@
 const tagsView = {
   state: {
     visitedViews: [],
-    cachedViews: []
+    cachedViews: ['admin-power']
   },
   mutations: {
     ADD_VISITED_VIEW: (state, view) => {
