@@ -7,6 +7,24 @@ export function userList(data) {
     data: data
   })
 }
+export function editUser(data) {
+  let params = {
+    realName:data.realName,
+    sex:data.sex,
+    birthDate:data.birthDate,
+    height:data.height,
+    weight:data.weight,
+    mobile:data.mobile,
+    doctorId:data.doctorId,
+    isStop:data.isStop,
+    userId:data.userId
+  }
+  return request({
+    url: '/userManage/user/basic/edit',
+    method: 'post',
+    data: params
+  })
+}
 
 export function userOnOff(data) {
   return request({

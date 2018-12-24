@@ -1,39 +1,89 @@
 <template>
-  <el-form :model="editForm" :rules="rules" 
+<!-- :rules="rules"  -->
+  <el-form :model="editForm" 
   size="middle"
   ref="hospitalForm" label-width="100px" :inline="false">
     <el-row>
       <el-col :span="12">
         <el-form-item label="用户姓名" prop="hospitalName">
-          <el-input v-model="editForm.hospitalName"></el-input>
+          <el-input v-model="editForm.realName"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="电话" prop="hospitalAddress">
-          <el-input v-model="editForm.hospitalAddress"></el-input>
+          <el-input v-model="editForm.mobile"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="12">
+      <!-- <el-col :span="12">
         <el-form-item label="邮箱" prop="adminName">
           <el-input v-model="editForm.adminName"></el-input>
+        </el-form-item>
+      </el-col> -->
+      <el-col :span="12">
+        <el-form-item label="性别" prop="adminName">
+          <el-select v-model="editForm.sex" placeholder="请选择" :style="{'width':'100%'}">
+            <el-option
+              label="男"
+              :value="1">
+            </el-option>
+            <el-option
+              label="女"
+              :value="0">
+            </el-option>
+          </el-select>
+          <!-- <el-input v-model="editForm.adminName"></el-input> -->
         </el-form-item>
       </el-col>
       <el-col :span="12">
         <el-form-item label="绑定医生ID" prop="adminPhone">
-          <el-input v-model="editForm.adminPhone"></el-input>
+          <el-input v-model="editForm.doctorId"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
+      <el-col :span="12">
+        <el-form-item label="身高(cm)" prop="adminAccount">
+          <el-input-number v-model="editForm.height" :controls="false" :min="1" :max="10" :style="{'width':'100%'}">
+          </el-input-number>
+          <!-- <el-input v-model="editForm.height" type="number">
+            <template slot="append">cm</template>
+          </el-input> -->
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="体重(kg)" prop="password" >
+          <el-input-number v-model="editForm.weight" :controls="false" :min="1" :max="10" :style="{'width':'100%'}">
+          </el-input-number>
+          <!-- <el-input v-model="editForm.weight" type="number">
+            <template slot="append">kg</template>
+          </el-input> -->
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="出生年月日" prop="adminEmail">
+          <!-- <el-input v-model="editForm.adminEmail"></el-input> -->
+          <el-date-picker
+            v-model="editForm.birthDate"
+            value-format="yyyy-MM-dd"
+            format="yyyy 年 MM 月 dd 日"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <!-- <el-row>
       <el-col :span="12">
         <el-form-item label="绑定医生姓名" prop="adminEmail">
           <el-input v-model="editForm.adminEmail"></el-input>
         </el-form-item>
       </el-col>
-    </el-row>
-    <el-row>
+    </el-row> -->
+    <!-- <el-row>
       <el-col :span="12">
         <el-form-item label="登录账号" prop="adminAccount">
           <el-input v-model="editForm.adminAccount"></el-input>
@@ -44,18 +94,18 @@
           <el-input v-model="editForm.password"></el-input>
         </el-form-item>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row>
       <el-col :span="12">
         <el-form-item label="账号状态" prop="accountStatus">
-          <el-switch v-model="editForm.accountStatus"></el-switch>
+          <el-switch v-model="editForm.isStop"></el-switch>
         </el-form-item>
       </el-col>
     </el-row>
     
     <div class="action-btn">
       <el-button type="primary" @click="submitForm('hospitalForm')">提交</el-button>
-      <el-button @click="resetForm('hospitalForm')">取消</el-button>
+      <!-- <el-button @click="resetForm('hospitalForm')">取消</el-button> -->
     </div>
   </el-form>
 </template>
@@ -142,8 +192,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
-            this.$emit('closeDialog')
+            // alert('submit!');
+            this.$emit('edit',this.editForm)
           } else {
             console.log('error submit!!');
             return false;
@@ -152,7 +202,7 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.$emit('closeDialog')
+        // this.$emit('closeDialog')
       }
     }
   }

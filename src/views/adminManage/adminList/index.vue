@@ -23,7 +23,7 @@
           <el-table-column
             type="expand">
             <template slot-scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
+              <el-form label-position="left" inline class="table-expand">
                 <el-form-item label="证件号码">
                   <span>{{ props.row.idCardNo }}</span>
                 </el-form-item>
@@ -207,6 +207,7 @@ export default {
       }
       if(action==='update'){
         this.action = '更新'
+        admin.password = ''
         this.currentEdit = admin
       }
       this.editDialog=true
@@ -310,14 +311,14 @@ export default {
   .center-text{
     text-align: center;
   }
-  .demo-table-expand {
+  .table-expand {
     font-size: 0;
   }
-  .demo-table-expand label {
+  .table-expand label {
     width: 90px;
     color: #99a9bf;
   }
-  .demo-table-expand .el-form-item {
+  .table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;

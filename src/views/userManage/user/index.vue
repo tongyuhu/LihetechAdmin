@@ -10,10 +10,12 @@
       <div class="button-wrap">
         <div>
           <!-- <el-button plain @click="editHandler">添加医院</el-button> -->
-          <el-button plain @click="deleteHandle">批量删除</el-button>
+          <!-- <el-button plain @click="deleteHandle">批量删除</el-button> -->
+          <el-button plain @click="openUsers(true)">批量开启</el-button>
+          <el-button plain @click="closeUsers">批量关闭</el-button>
         </div>
         <div class="hospital-num">
-          <span>用户：共240</span>  
+          <span>用户：共{{pageTotal}}</span>  
         </div>
       </div>
       <div>
@@ -31,7 +33,11 @@
             prop="realName"
             label="用户姓名"
             width="120">
-            <template slot-scope="scope">{{ scope.row.realName ||scope.row.nickName|| ''}}</template>
+            <template slot-scope="scope">
+              <el-button type="text" @click="lookUserInfo(scope.row)">
+                {{ scope.row.realName ||scope.row.nickName|| ''}}
+              </el-button>
+            </template>
           </el-table-column>
           <el-table-column
             prop="mobile"
@@ -76,7 +82,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="editHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="editHandler(scope.row)">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -97,72 +103,41 @@
     title="" 
     :visible.sync="editDialog" 
     width="70%">
-      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
+      <edit v-if="editDialog" :defaultData="editData" @edit="editUserInfo"></edit>
     </el-dialog>
     <el-dialog 
     title="" 
-    :visible.sync="deleteConfirm" 
-    width="50%"
+    :visible.sync="userInfoDialog" 
+    width="80%"
     center
     >
-    <div class="center-text">
-      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
-      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
-    </div>
+      <info v-if="userInfoDialog" :defaultData="currentUserData"></info>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import edit from './edit'
-import {userList} from '@/api/userManage'
+import info from './info'
+import {userList,editUser,userOnOff} from '@/api/userManage'
 export default {
   name:'hospital',
   components:{
-    edit
+    edit,
+    info
   },
   data() {
     return {
       searchData:'',
       editDialog:false,
-      tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
-      ],
+      tableData:[],
       multipleSelection: [],
       currentPage:1,
       pageSize:10,
-      pageTotal:40,
-      deleteConfirm:false,
-      currentHospital:{}
+      pageTotal:0,
+      editData:{},
+      userInfoDialog:false,
+      currentUserData:{}
     }
   },
   created() {
@@ -179,31 +154,12 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    searchHandler(){},
-    editHandler(){
-      this.editDialog=true
-    },
-    deleteHandle(){
-      if(this.multipleSelection.length>0){
-        this.deleteConfirm = true
-      }else{
-        this.$message({
-          message: '请选择医院',
-          type: 'warning'
-        });
-      }
-    },
-    closeHospitalDialog(){
-      this.editDialog = false
-    },
-    deleteConfirmHandler(){
-      this.deleteConfirm = false
-    },
-    getData(){
+    searchHandler(){
       let vm = this
       let params = {
-        pageNum: this.currentPage,
-        pageSize: this.pageSize
+        pageNum: 1,
+        pageSize: this.pageSize,
+        fields:this.searchData
       }
       userList(params).then((res)=>{
         if(res.code === '0000') {
@@ -213,6 +169,107 @@ export default {
         }
         console.log(res,'用户列表')
       })
+    },
+    editHandler(row){
+      this.editData = row
+      this.editDialog=true
+    },
+    editUserInfo(user){
+      let vm = this
+      editUser(user).then(res=>{
+        if(res.code === '0000'){
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          async function getdata() {
+            await vm.getData()
+            vm.editDialog = false
+          }
+          getdata()
+        }else{
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    deleteHandle(){
+      if(this.multipleSelection.length>0){
+        this.deleteConfirm = true
+      }else{
+        this.$message({
+          message: '请选择用户',
+          type: 'warning'
+        });
+      }
+    },
+    openUsers(open){
+      let vm = this
+      if(this.multipleSelection.length>0){
+        let arr = []
+        vm.multipleSelection.forEach(item => {
+          arr.push(item.id)
+        })
+        
+          let params = {
+          ids:arr.join(','),
+          isStop:open
+        }
+        userOnOff(params).then(res=>{
+          if(res.code === '0000'){
+            vm.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            async function getdata() {
+              await vm.getData()
+              vm.editDialog = false
+            }
+            getdata()
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+      }else{
+        vm.$message({
+          message: '请选择用户',
+          type: 'warning'
+        });
+      }
+    },
+    closeUsers(){
+      this.openUsers(false)
+    },
+    closeHospitalDialog(){
+      this.editDialog = false
+    },
+    getData(){
+      let vm = this
+      let params = {
+        pageNum: this.currentPage,
+        pageSize: this.pageSize
+      }
+      if(this.fields){
+        params.fields = this.fields
+      }
+      userList(params).then((res)=>{
+        if(res.code === '0000') {
+          if(res.data.length>0){
+            vm.tableData = res.data
+            vm.pageTotal = res.recordCount
+          }
+        }
+        console.log(res,'用户列表')
+      })
+    },
+    lookUserInfo(user){
+      this.currentUserData = user
+      this.userInfoDialog = true
     }
   }
 }
