@@ -26,10 +26,15 @@
         <span>{{ userData.isStop | isStop}}</span>
       </el-form-item>
     </el-form>
+    <bloodAverage :id="defaultData.id"></bloodAverage>
+    <bloodTrend :id="defaultData.id"></bloodTrend>
   </div>
 </template>
 
 <script>
+import bloodAverage from './bloodAverage'
+import bloodTrend from './bloodTrend'
+
   export default {
     name:'edit',
     props:{
@@ -42,6 +47,10 @@
         userData:this.defaultData,
       }
     },
+    components: {
+      bloodTrend,
+      bloodAverage
+    },
     methods: {
     }
   }
@@ -52,6 +61,7 @@
   }
   .table-expand {
     font-size: 0;
+    margin-left: 20px;
   }
   .table-expand label {
     width: 90px;
