@@ -2,6 +2,8 @@ import Vue from 'vue'
 
 import Cookies from 'js-cookie'
 
+import _ from 'lodash'
+
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import Element from 'element-ui'
@@ -33,7 +35,7 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
-
+Vue.prototype._ = _
 new Vue({
   el: '#app',
   router,

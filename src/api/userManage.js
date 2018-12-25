@@ -41,4 +41,20 @@ export function bloodCover(data) {
     data:data
   })
 }
+export function bloodAverage(data,type) {
+  data.dateType = type + 1
+  return request({
+    url: '/userManage/blood/trend/bpAvg',
+    method: 'post',
+    data:data
+  })
+}
+export function bloodTrend(data,type) {
+  data.dateType = type
+  return request({
+    url: '/userManage/blood/trend',
+    method: 'post',
+    data:data
+  })
+}
 

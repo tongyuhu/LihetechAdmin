@@ -2,18 +2,16 @@
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
-        <el-input placeholder="请输入医生姓名/电话/邮箱/所属医院" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索医生</span>
+        <el-input placeholder="输入用户名称/电话/邮箱/绑定医生姓名" v-model="searchData" class="input-with-select">
+          <span slot="prepend">搜索查询</span>
           <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler">添加医生</el-button>
-          <el-button plain @click="deleteHandle">批量删除</el-button>
-        </div>
-        <div class="hospital-num">
-          <span>医生：共240</span>  
+          <el-button plain @click="addHandler('add')">添加医生</el-button>
+          <el-button plain @click="openUsers(0)">批量开启</el-button>
+          <el-button plain @click="closeUsers">批量关闭</el-button>
         </div>
       </div>
       <div>
@@ -22,30 +20,44 @@
           :data="tableData"
           tooltip-effect="dark"
           style="width: 100%"
-          @selection-change="handleSelectionChange">
+          @selection-change="handleSelectionChange"
+          >
           <el-table-column
             type="selection"
             width="55">
           </el-table-column>
+          <!-- <el-table-column
+            type="expand">
+            <template slot-scope="props">
+              <el-form label-position="left" inline class="table-expand">
+                <el-form-item label="证件号码">
+                  <span>{{ props.row.idCardNo }}</span>
+                </el-form-item>
+                <el-form-item label="最后登录IP">
+                  <span>{{ props.row.loginIp }}</span>
+                </el-form-item>
+                <el-form-item label="最后登录日期">
+                  <span>{{ props.row.loginDate }}</span>
+                </el-form-item>
+                <el-form-item label="角色id集合">
+                  <span>{{ props.row.rolesId }}</span>
+                </el-form-item>
+                <el-form-item label="最后修改人员id">
+                  <span>{{ props.row.operatId }}</span>
+                </el-form-item>
+                <el-form-item label="版本号">
+                  <span>{{ props.row.version }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column> -->
           <el-table-column
-            prop="hospitalName"
-            label="医生名称"
-            width="120">
-            <template slot-scope="scope">{{ scope.row.hospitalName }}</template>
+            prop="name"
+            label="医生姓名">
           </el-table-column>
           <el-table-column
-            prop="address"
-            label="医生地址"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="admin"
-            label="管理员"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="phone"
-            label="联系电话"
+            prop="mobile"
+            label="电话"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -54,27 +66,43 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="doctorAccount"
-            label="医生账号"
+            prop="memberCount"
+            label="绑定患者人数"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="jionTime"
+            prop="hospitalName"
+            label="医院名称"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="username"
+            label="用户名"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="joinTime"
             label="加入时间"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.joinTime | joinTime }}</span>
+            </template>
           </el-table-column>
+
           <el-table-column
-            prop="status"
-            label="账号状态"
+            label="是否启用"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.enabled === true ? "是":'否'}}</span>
+            </template>
           </el-table-column>
+
+
           <el-table-column
             label="操作"
-            width="100"
-            v-if="see_power"
-            >
+            width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler('update',scope.row)">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -84,125 +112,184 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="100"
+            :page-size="10"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="pageTotal">
           </el-pagination>
         </div>
       </div>
-      <!-- <div v-edit="['roles']">
-        v-edit="roles"
-      </div> -->
     </el-card>
     <el-dialog 
     title="" 
-    :visible.sync="editDialog" 
+    :visible.sync="editDialog"
     width="70%">
-      <edit @closeDialog="closeDialog" :defaultData="currentHospital"></edit>
-    </el-dialog>
-    <el-dialog 
-    title="" 
-    :visible.sync="deleteConfirm" 
-    width="50%"
-    center
-    >
-    <div class="center-text">
-      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
-      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
-    </div>
+      <edit v-if="editDialog" @edit="editHandler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>
 </template>
-
 <script>
+
 import edit from './edit'
+import {doctorList,doctorEdit,doctorAdd,doctorOnOff} from '@/api/hospitalManage.js'
 export default {
-  name:'doctor',
+  name:'hospital',
   components:{
     edit
   },
   data() {
     return {
-      searchData:'',
       editDialog:false,
-      tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
-      ],
-      multipleSelection: [],
+      tableData:[],
+      currentEdit:{},
+      action:'编辑',
+      searchData:'',
       currentPage:1,
-      pageSize:1,
-      pageNum:40,
-      deleteConfirm:false,
-      currentHospital:{}
+      pageSize:10,
+      pageTotal:40,
+      multipleSelection:[]
     }
   },
-  computed:{
-  },
   created() {
+    this.getData({
+      pageNum:this.currentPage,
+      pageSize:this.pageSize,
+    })
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    addHandler(action,admin){
+      if(action==='add'){
+        this.action = '添加'
+        this.currentEdit = {
+          // roleName:null,
+          // authsId:null,
+          // description:null,
+          // roleCode:null
+        }
+      }
+      if(action==='update'){
+        this.action = '编辑'
+        admin.password = ''
+        this.currentEdit = admin
+      }
+      this.editDialog=true
+    },
+    getData(params){
+      doctorList(params).then(res=>{
+        if(res.code === '0000'){
+          this.tableData = res.data
+          this.pageTotal = res.recordCount
+        }
+      })
+    },
+    editHandler(admin){
+      let vm = this
+      if(this.action==='添加'){
+        console.log('add',admin)
+        doctorAdd(admin).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.unshift(admin)
+            vm.$message({
+              message: '添加成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+      }
+      if(this.action==='编辑'){
+        doctorEdit(admin).then(res=>{
+          if(res.code==='0000'){
+            this.tableData.forEach((item,index)=>{
+              if(item.id === admin.id){
+                this.tableData.splice(index,1,admin)
+              }
+            })
+            vm.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        
+        // this.tableData.push(admin)
+        console.log('update',admin)
+      }
     },
     handleSizeChange(val) {
+      this.pageSize = val
+      this.getData({
+        pageSize:val,
+        pageNum:1
+      })
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val
+      this.getData({
+        pageSize:this.pageSize,
+        pageNum:val
+      })
       console.log(`当前页: ${val}`);
     },
-    searchHandler(){},
-    addHandler(){
-      // console.log('[[')
-      this.editDialog=true
+    searchHandler(){
+      this.getData({
+        pageSize:this.pageSize,
+        pageNum:1,
+        fields:this.searchData
+      })
     },
-    deleteHandle(){
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    openUsers(open){
+      let vm = this
       if(this.multipleSelection.length>0){
-        this.deleteConfirm = true
+        let arr = []
+        vm.multipleSelection.forEach(item => {
+          arr.push(item.id)
+        })
+        
+          let params = {
+          ids:arr.join(','),
+          isStop:open
+        }
+        doctorOnOff(params).then(res=>{
+          if(res.code === '0000'){
+            vm.$message({
+              message: '修改成功',
+              type: 'success'
+            })
+            async function getdata() {
+              await vm.getData()
+              vm.editDialog = false
+            }
+            getdata()
+          }else{
+            vm.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
       }else{
-        this.$message({
-          message: '请选择医生',
+        vm.$message({
+          message: '请选择用户',
           type: 'warning'
         });
       }
     },
-    closeDialog(){
-      this.editDialog = false
+    closeUsers(){
+      this.openUsers(1)
     },
-    deleteConfirmHandler(){
-      this.deleteConfirm = false
-    }
-  },
-  mounted(){
-    // console.log(this.$route.meta.roles)
   }
 }
 </script>
@@ -227,5 +314,17 @@ export default {
   }
   .center-text{
     text-align: center;
+  }
+  .table-expand {
+    font-size: 0;
+  }
+  .table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>
