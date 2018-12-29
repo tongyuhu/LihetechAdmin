@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="editForm" :rules="rules" 
+  <el-form :model="editForm"
   size="middle"
   ref="hospitalForm" label-width="100px" :inline="false">
     <el-form-item label="留言内容">
