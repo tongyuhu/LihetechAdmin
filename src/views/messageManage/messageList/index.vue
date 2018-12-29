@@ -3,7 +3,7 @@
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
         <el-input placeholder="请输入留言信息" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索医院</span>
+          <span slot="prepend">搜索信息</span>
           <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
@@ -28,40 +28,36 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="hospitalName"
+            prop="realame"
             label="用户姓名"
             width="120">
-            <template slot-scope="scope">{{ scope.row.hospitalName }}</template>
+            <template slot-scope="scope">{{ scope.row.realame }}</template>
           </el-table-column>
           <el-table-column
-            prop="address"
-            label="联系电话"
+            prop="createTime"
+            label="创建时间"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="admin"
-            label="邮箱"
+            prop="feedDesc"
+            label="意见反馈"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="phone"
-            label="留言内容"
+            prop="dealWithContent"
+            label="处理意见"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="email"
-            label="时间"
+            prop="name"
+            label="处理人姓名"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="doctorAccount"
-            label="状态"
+            prop="isProcessed"
+            label="是否处理"
             show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="jionTime"
-            label="操作人"
-            show-overflow-tooltip>
+            <template slot-scope="scope">{{ scope.row.isProcessed === 1 ? '已处理' : '未处理' }}</template>
           </el-table-column>
           <!-- <el-table-column
             prop="status"
@@ -72,7 +68,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">处理建议</el-button>
+                <el-button type="text" size="small" @click="editHandler(scope.row)">处理建议</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -93,7 +89,7 @@
     title="" 
     :visible.sync="editDialog" 
     width="70%">
-      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
+      <edit @edit="editSuggest" v-if="editDialog" :suggest="currentSuggest"></edit>
     </el-dialog>
     <el-dialog 
     title="" 
@@ -111,6 +107,7 @@
 
 <script>
 import edit from './edit'
+import {suggestList,suggestSubmit } from '@/api/messageManage.js'
 export default {
   name:'hospital',
   components:{
@@ -121,46 +118,17 @@ export default {
       searchData:'',
       editDialog:false,
       tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
       ],
       multipleSelection: [],
       currentPage:1,
       pageSize:1,
       pageTotal:40,
       deleteConfirm:false,
-      currentHospital:{}
+      currentSuggest:{}
     }
   },
   created() {
+    this.getData()
   },
   methods: {
     handleSelectionChange(val) {
@@ -168,12 +136,17 @@ export default {
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.pageSize = val
+      this.getData()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.pageNum = val
+      this.getData()
     },
     searchHandler(){},
-    addHandler(){
+    editHandler(val){
+      this.currentSuggest = val
       this.editDialog=true
     },
     deleteHandle(){
@@ -186,14 +159,40 @@ export default {
         });
       }
     },
-    closeHospitalDialog(){
-      this.editDialog = false
-    },
+  
     deleteConfirmHandler(){
       this.deleteConfirm = false
     },
     getData(){
-
+      let vm = this
+      let params = {
+        pageNum:vm.pageNum,
+        pageSize:vm.pageSize
+      }
+      if(vm.searchData){
+        params.fields = vm.searchData
+      }
+      suggestList(params).then(res=>{
+        if(res.code === '0000'){
+          vm.tableData = res.data
+        }
+      })
+    },
+    editSuggest(suggest){
+      let vm = this
+      suggestSubmit(suggest).then(res=>{
+        if(res.code === '0000'){
+          vm.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+        }else{
+          vm.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
     }
   }
 }
