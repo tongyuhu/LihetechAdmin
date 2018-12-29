@@ -12,7 +12,7 @@
             </el-col>
             <el-col :span="8" >
               <div class="text-wrap">
-                <div>15</div>
+                <div>{{number.numHospital}}</div>
                 <div>在线医院</div>
               </div>
             </el-col>
@@ -29,7 +29,7 @@
             </el-col>
             <el-col :span="8">
               <div class="text-wrap">
-                <div>15</div>
+                <div>{{number.numDoctor}}</div>
                 <div>在线医生</div>
               </div>
             </el-col>
@@ -49,7 +49,7 @@
           </el-col>
           <el-col :span="8">
             <div class="text-wrap">
-              <div>15</div>
+              <div>{{number.numSumMember}}</div>
               <div>注册用户</div>
             </div>
           </el-col>
@@ -66,7 +66,7 @@
           </el-col>
           <el-col :span="8">
             <div class="text-wrap">
-              <div>15</div>
+              <div>{{number.numBindDocMember}}</div>
               <div>绑定医生用户</div>
             </div>
           </el-col>
@@ -77,11 +77,29 @@
 </div>
 </template>
 <script>
+import {userNumber} from '@/api/home'
 export default {
   name:'Total',
   data () {
     return {
-      
+      number:{
+        "numBindDocMember": 0, 
+        "numSumMember": 0, 
+        "numDoctor": 0, 
+        "numHospital": 0
+      }
+    }
+  },
+  created () {
+    this.getData()
+  },
+  methods: {
+    getData(){
+      userNumber().then(res=>{
+        if(res.code === '0000') {
+          this.number = {...res.data}
+        }
+      })
     }
   }
 }
