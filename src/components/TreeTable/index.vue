@@ -3,7 +3,7 @@
     <el-table-column v-if="columns.length===0" width="100">
       <template slot-scope="scope">
         <span v-for="space in scope.row._level" :key="space" class="ms-tree-space"/>
-        <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
+        <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index,scope.row)">
           <i v-if="!scope.row._expanded" class="el-icon-arrow-right"/>
           <i v-else class="el-icon-arrow-down"/>
         </span>
@@ -15,7 +15,7 @@
         <!-- Todo -->
         <!-- eslint-disable-next-line vue/no-confusing-v-for-v-if -->
         <span v-for="space in scope.row._level" v-if="index === 0" :key="space" class="ms-tree-space"/>
-        <span v-if="iconShow(index,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
+        <span v-if="iconShow(index,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index,scope.row)">
           <i v-if="!scope.row._expanded" class="el-icon-plus"/>
           <i v-else class="el-icon-minus"/>
         </span>
@@ -32,6 +32,7 @@
   Created: 2018/1/19-13:59
 */
 import treeToArray from './eval'
+// import {powerList,powerAdd,powerUpdate,powerStop} from '@/api/adminManage.js'
 export default {
   name: 'TreeTable',
   props: {
@@ -49,6 +50,10 @@ export default {
     expandAll: {
       type: Boolean,
       default: false
+    },
+    alwaysShowExpandIcon:{
+      type:Boolean,
+      default:false
     }
   },
   computed: {
@@ -72,14 +77,34 @@ export default {
       return show ? 'animation:treeTableShow 1s;-webkit-animation:treeTableShow 1s;' : 'display:none;'
     },
     // 切换下级是否展开
-    toggleExpanded: function(trIndex) {
+    toggleExpanded: function(trIndex,row) {
+      // this.expandChild()
+      let vm =this
+      // let arr = []
+      // async function foo(){
+      //   await powerList(row.id).then(res=>{
+      //       arr = res.data
+      //       // vm.$set(vm.$data,'tableData',[...arr])
+      //       // console.log('daddsssssssss',res,vm.$data.tableData)
+      //     })
+      //     vm.$emit('expand',arr)
+      //   // console.log(vm.$children)
+      //   // vm.$child
+      // }
+      // foo()
+      
       const record = this.formatData[trIndex]
       record._expanded = !record._expanded
+      // console.log(1)
     },
     // 图标显示
     iconShow(index, record) {
-      return (index === 0 && record.children && record.children.length > 0)
-    }
+      if(this.alwaysShowExpandIcon){
+        return true
+      }else{
+        return (index === 0 && record.children && record.children.length > 0)
+      }
+    },
   }
 }
 </script>

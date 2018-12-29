@@ -94,15 +94,15 @@ function addChild(source,child){
     }
     if(item.id === child.parentId){
       // if(item.chi)
-      let is = false
-        item.children.forEach(i => {
-          if(i.id===child.id){
-            is = true
-          }
-        })
-        if(!is){
+      // let is = false
+      //   item.children.forEach(i => {
+      //     if(i.id===child.id){
+      //       is = true
+      //     }
+      //   })
+        // if(!is){
           item.children.push(child)
-        }
+        // }
     }else{
       if(item.children){
         addChild(item.children,child)
@@ -173,7 +173,7 @@ export default {
       args: [null, null, 'timeLine'],
       tableData:[],
       deleteConfirm:false,
-      childrenData:[],
+      childrenData:{},
       updateChildrenData:{},
     }
   },
@@ -188,19 +188,23 @@ export default {
     addHandler(row){
       console.log(row,'tianjia')
       let vm = this
-      async function getChild() {
-          await powerList(row.id).then(res=>{
-            if(res.code === '0000'){
-              res.data.forEach(item => {
-                item.add = false
-              })
-              vm.childrenData =  res.data
-              vm.addDialog = true
-            }
-          })
+      vm.childrenData = {
+        parentId:row.id
       }
-      getChild()
-      console.log( vm.childrenData,'zi')
+      vm.addDialog = true
+      // async function getChild() {
+      //     await powerList(row.id).then(res=>{
+      //       if(res.code === '0000'){
+      //         res.data.forEach(item => {
+      //           item.add = false
+      //         })
+      //         vm.childrenData =  res.data
+      //         vm.addDialog = true
+      //       }
+      //     })
+      // }
+      // getChild()
+      // console.log( vm.childrenData,'zi')
     },
     deleteHandle(row){
       let arr = deleteChild(this.tableData,row)
@@ -215,8 +219,31 @@ export default {
         powerList(parentId).then(res=>{
           if(res.code === '0000' && res.data.length > 0){
             vm.tableData = res.data
+            vm.getChild(vm.tableData)
           }
         })
+    },
+    getChild(parent){
+      let vm = this
+      // let source = []
+      function getChildren(parent){
+        if(parent.length>0){
+          parent.forEach(item=>{
+            async function foo(){
+
+              await powerList(item.id).then(res=>{
+                res.data.forEach(item=>{
+                  let source = addChild(vm.tableData,item)
+                  vm.$set(vm.$data,'tableData',[...source])
+                })
+                getChildren(res.data)
+              })
+            }
+            foo()
+          })
+        }
+      }
+      getChildren(parent)
     },
     addChildHandler(child){
       let vm = this
@@ -276,7 +303,7 @@ export default {
         }
       })
       
-    }
+    },
   },
   created () {
     this.getData(0)
