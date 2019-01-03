@@ -7,6 +7,15 @@
           <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
+      <!-- <div class="button-wrap">
+        <div>
+          <el-button plain @click="addHandler">添加医院</el-button>
+          <el-button plain @click="deleteHandle">批量删除</el-button>
+        </div>
+        <div class="hospital-num">
+          <span>医院：共240</span>  
+        </div>
+      </div> -->
       <div>
         <el-table
           ref="multipleTable"
@@ -18,8 +27,8 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="realName"
-            label="用户姓名"
+            prop="name"
+            label="管理员姓名"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -142,7 +151,7 @@ export default {
       if(this.searchData){
         params.fields = this.searchData
       }
-      userLogList(params).then(res=>{
+      adminLogList(params).then(res=>{
         if(res.code === '0000') { 
           vm.tableData = res.data
           vm.pageTotal = res.recordCount

@@ -25,7 +25,7 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/40/h/40'" class="user-avatar">
+          <img src='@/assets/defaultUser.png' class="user-avatar">
           <!-- <i class="el-icon-caret-bottom"/> -->
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -119,7 +119,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
-
+import avatars from '@/assets/defaultUser.png'
 export default {
   components: {
     Breadcrumb,
@@ -195,6 +195,7 @@ export default {
       }
     }
     return {
+      avatars:avatars,
       editDialog: false,
       changePwdDialog: false,
       editForm:{
@@ -298,7 +299,7 @@ export default {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 50%;
         }
         .el-icon-caret-bottom {
           cursor: pointer;

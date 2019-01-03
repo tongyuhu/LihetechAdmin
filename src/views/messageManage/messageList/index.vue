@@ -29,19 +29,17 @@
           </el-table-column>
           <el-table-column
             prop="realame"
-            label="用户姓名"
-            width="120">
+            label="用户姓名">
             <template slot-scope="scope">{{ scope.row.realame }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="createTime"
-            label="创建时间"
-            width="120">
           </el-table-column>
           <el-table-column
             prop="feedDesc"
             label="意见反馈"
             show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间">
           </el-table-column>
           <el-table-column
             prop="dealWithContent"

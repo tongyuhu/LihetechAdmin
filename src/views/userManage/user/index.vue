@@ -57,8 +57,8 @@
             <template slot-scope="scope">{{ scope.row.bloodPressureType|bloodPressureType}}</template>
           </el-table-column>
           <el-table-column
-            prop="email"
-            label="绑定医生姓名"
+            prop="adminIdMainDoctor"
+            label="绑定医生编号"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column

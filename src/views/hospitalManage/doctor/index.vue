@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column
             prop="mobile"
-            label="电话"
+            label="联系电话"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -66,20 +66,19 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="memberCount"
-            label="绑定患者人数"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
             prop="hospitalName"
             label="医院名称"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="username"
-            label="用户名"
+            prop="memberCount"
+            label="绑定患者"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span>{{scope.row.memberCount ? scope.row.memberCount+ '人' :'无'}}</span>
+            </template>
           </el-table-column>
+          
           <el-table-column
             prop="joinTime"
             label="加入时间"
@@ -90,10 +89,10 @@
           </el-table-column>
 
           <el-table-column
-            label="是否启用"
+            label="账号状态"
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <span>{{scope.row.enabled === true ? "是":'否'}}</span>
+              <span>{{scope.row.enabled === true ? "开启":'禁用'}}</span>
             </template>
           </el-table-column>
 
