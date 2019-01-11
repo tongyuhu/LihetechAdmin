@@ -17,6 +17,13 @@ module.exports = {
           '^/api': '/'  //用'/api'代替target里面的地址
                 
         }
+      },
+      '/ips': {
+        target: 'http://192.168.2.131:80',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/ips': ''
+        }
       }
     },
 

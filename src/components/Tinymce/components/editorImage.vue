@@ -10,9 +10,11 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
+        :headers="{'Access-Control-Allow-Origin':'*'}"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
-        list-type="picture-card">
+        action="1"
+        list-type="picture-card"
+        :http-request="httpUpload">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -23,7 +25,7 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
-
+import {upload} from '@/api/commons/upload.js'
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -43,18 +45,36 @@ export default {
     checkAllSuccess() {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
+    httpUpload(val){
+      // console.log(val)
+      let formData = new FormData()
+      formData.append('files', val.file)
+      formData.append('uploadType', 4)
+      upload(formData).then(res=>{
+        if(res.code === '0000') { 
+          this.fileList.push({
+            url:res.data.seeFile,
+            size:res.data.size
+          })
+
+        }else{
+          this.$message(res.msg)
+        }
+      })
+    },
     handleSubmit() {
-      const arr = Object.keys(this.listObj).map(v => this.listObj[v])
-      if (!this.checkAllSuccess()) {
-        this.$message('请等待所有图片上传成功 或 出现了网络问题，请刷新页面重新上传！')
-        return
-      }
-      this.$emit('successCBK', arr)
+      // const arr = Object.keys(this.listObj).map(v => this.listObj[v])
+      // if (!this.checkAllSuccess()) {
+      //   this.$message('请等待所有图片上传成功 或 出现了网络问题，请刷新页面重新上传！')
+      //   return
+      // }
+      this.$emit('successCBK', this.fileList)
       this.listObj = {}
       this.fileList = []
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
+      console.log('upload',response)
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {

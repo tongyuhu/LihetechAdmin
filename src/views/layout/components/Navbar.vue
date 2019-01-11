@@ -121,6 +121,7 @@ import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
 import avatars from '@/assets/defaultUser.png'
+import {logout} from '@/api/logout.js'
 export default {
   components: {
     Breadcrumb,
@@ -239,6 +240,9 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
+      logout().then(res=>{
+        window.location.href = '/operat/login'
+      })
       // this.$store.dispatch('LogOut').then(() => {
       //   location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       // })

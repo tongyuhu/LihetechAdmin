@@ -1,9 +1,8 @@
 import request from '@/utils/request'
 
-export function infoList(data) {
+export function logout() {
   return request({
-    url: '/article/info/list',
+    url: '/logout',
     method: 'post',
-    data: data
   })
 }

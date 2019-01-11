@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 import qs from 'qs'
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api 的 base_url
+  // baseURL: process.env.BASE_API, // api 的 base_url
   headers: {'Access-Control-Allow-Origin': '*'},
   timeout: 5000 // request timeout
 })
@@ -21,7 +21,11 @@ service.interceptors.request.use(
       config.headers['Access-Control-Allow-Origin'] = '*'
       
     // }
-    if (config.method === 'post') {
+    if (config.url === '/BPWatch/upload/commons') {
+      config.baseURL = process.env.BASE_IPS
+      // config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    }else if (config.method === 'post') {
+      config.baseURL = process.env.BASE_API
       config.data = qs.stringify(config.data)
     }
     return config
@@ -85,7 +89,7 @@ service.interceptors.response.use(
           break
 
         case 403:
-          window.location.href = 'http://192.168.2.131:8082/operat/login'
+          window.location.href = '/operat/login'
           error.message = '拒绝访问'
           break
 

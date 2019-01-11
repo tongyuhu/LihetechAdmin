@@ -28,39 +28,39 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="hospitalName"
+            prop="inforTitle"
             label="资讯标题"
-            width="120">
-            <template slot-scope="scope">{{ scope.row.hospitalName }}</template>
+            show-overflow-tooltip>
+            <template slot-scope="scope">{{ scope.row.inforTitle }}</template>
           </el-table-column>
           <el-table-column
-            prop="address"
-            label="资讯类型"
-            width="120">
+            prop="inforTitleSmall"
+            label="资讯小标题"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="admin"
+            prop="inforTypeSmall"
             label="资讯分类"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="phone"
-            label="浏览次数"
+            prop="inforTypeBig"
+            label="视频大分类"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="email"
-            label="邮箱"
+            prop="readNum"
+            label="阅读次数"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="doctorAccount"
-            label="发布人员"
+            prop="praiseNum"
+            label="点赞次数"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="jionTime"
-            label="发布时间"
+            prop="transmitNum"
+            label="转发次数"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -91,12 +91,13 @@
       <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
     </el-dialog>
     <el-dialog 
-    title="" 
+    title="确认删除" 
     :visible.sync="deleteConfirm" 
     width="50%"
     center
     >
     <div class="center-text">
+      <!-- <span slot="title">确认删除</span> -->
       <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
       <el-button type="default" @click="deleteConfirm=false">取消</el-button>
     </div>
@@ -106,6 +107,7 @@
 
 <script>
 import edit from './edit'
+import {infoList} from '@/api/infoManage.js'
 export default {
   name:'hospital',
   components:{
@@ -189,8 +191,20 @@ export default {
       this.deleteConfirm = false
     },
     getData(){
-
+      let params = {
+        isStop:0,
+        inforTypeSmall:1,
+        inforTypeBig:1,
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
+      }
+      infoList(params).then(res=>{
+        this.tableData = res.data.list
+      })
     }
+  },
+  created () {
+    this.getData()
   }
 }
 </script>
