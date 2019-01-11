@@ -324,6 +324,9 @@ export default {
     },
     updateChildHandler(child){
       let vm = this
+      if(child.parentId === 0){
+        
+      }
       powerUpdate(child).then(res=>{
         if(res.code === '0000'){
           let arr = updateChild(vm.tableData,child)

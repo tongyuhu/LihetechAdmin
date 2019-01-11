@@ -142,7 +142,7 @@
       handlePowerChange(val){
         console.log('val',val)
         if(val.length > 0){
-          this.tableData.parentId = val[val.length]
+          this.tableData.parentId = val[val.length-1]
         }else{
           this.tableData.parentId = 0
         }
