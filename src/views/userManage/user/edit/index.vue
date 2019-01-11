@@ -37,8 +37,18 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="绑定医生ID" prop="adminPhone">
-          <el-input v-model="editForm.doctorId"></el-input>
+        <el-form-item label="绑定医生" prop="adminPhone">
+          <span v-if="editForm.doctorId && !changeDoctorType">
+            <span >已绑定</span>
+            <el-button type="text" @click="changeDoctor">更改</el-button>
+          </span>
+          <selectDoctor v-if="changeDoctorType || !editForm.doctorId" :doctor='editForm.doctorId'></selectDoctor>
+          <!-- <el-cascader
+            :options="options"
+            v-model="editForm.doctorId"
+            @active-item-change="handleItemChange"
+          ></el-cascader> -->
+          
         </el-form-item>
       </el-col>
     </el-row>
@@ -111,12 +121,18 @@
 </template>
 
 <script>
+import {doctorList} from '@/api/commons/doctorList.js'
+import {hospitalList,hospitalEdit,hospitalAdd,hospitalOnOff} from '@/api/hospitalManage.js'
+import selectDoctor from '@/components/SelectDoctor'
   export default {
     name:'edit',
     props:{
       defaultData:{
         type:Object
       }
+    },
+    components: {
+      selectDoctor
     },
     data() {
       var checkEmail = (rule, value, callback) => {
@@ -185,7 +201,13 @@
           password: [
             { validator: checkPass, trigger: 'change' }
           ]
-        }
+        },
+        options:[],
+        changeDoctorType:false
+        // props: {
+        //   value: 'hospital',
+        //   children: 'doctor'
+        // }
       };
     },
     methods: {
@@ -203,7 +225,23 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         // this.$emit('closeDialog')
+      },
+      handleItemChange(val){
+        console.log('active item:', val)
+      },
+      getHospital(){
+        let vm = this
+        hospitalList().then(res=>{
+          console.log('hospital',res)
+          // vm.options
+        })
+      },
+      changeDoctor(){
+        this.changeDoctorType = true
       }
+    },
+    created(){
+      this.getHospital()
     }
   }
 </script>

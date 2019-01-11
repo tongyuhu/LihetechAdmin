@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
+      <span class="right-menu-title"><strong>莲健康后台管理平台</strong></span>
       <template v-if="device!=='mobile'">
         <!-- <error-log class="errLog-container right-menu-item"/> -->
 
@@ -25,7 +26,7 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img src='@/assets/defaultUser.png' class="user-avatar">
+          <img src='@/assets/defaultUser.jpg' class="user-avatar">
           <!-- <i class="el-icon-caret-bottom"/> -->
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -273,8 +274,13 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
+    &-title{
+      font-size: 14px;
+      position: relative;
+      bottom: 15px
+    }
     &:focus{
-     outline: none;
+      outline: none;
     }
     .right-menu-item {
       display: inline-block;
@@ -299,7 +305,7 @@ export default {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 50%;
+          // border-radius: 50%;
         }
         .el-icon-caret-bottom {
           cursor: pointer;

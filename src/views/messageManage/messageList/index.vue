@@ -13,7 +13,7 @@
           <el-button plain @click="deleteHandle">批量删除</el-button>
         </div>
         <div class="hospital-num">
-          <span>意见：共240</span>  
+          <span>意见：共{{pageTotal}}</span>  
         </div>
       </div>
       <div>
@@ -86,7 +86,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog" 
-    width="70%">
+    width="70%"
+    center>
+      <span slot="title">处理建议</span>
       <edit @edit="editSuggest" v-if="editDialog" :suggest="currentSuggest"></edit>
     </el-dialog>
     <el-dialog 
@@ -120,7 +122,7 @@ export default {
       multipleSelection: [],
       currentPage:1,
       pageSize:1,
-      pageTotal:40,
+      pageTotal:0,
       deleteConfirm:false,
       currentSuggest:{}
     }
@@ -173,6 +175,7 @@ export default {
       suggestList(params).then(res=>{
         if(res.code === '0000'){
           vm.tableData = res.data
+          vm.pageTotal = res.recordCount
         }
       })
     },

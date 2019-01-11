@@ -49,7 +49,7 @@ export function powerUpdate(child) {
 export function powerStop(child) {
   let parms = {
     ids:child.id,
-    isStop:child.isStop ? 0 : 1
+    isStop:child.isStop
   }
   return request({
     url: '/auths/update/stop',

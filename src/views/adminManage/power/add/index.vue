@@ -50,7 +50,22 @@
       </template>
     </el-table-column>
   </el-table> -->
+  
   <el-form ref="form" :model="tableData" label-width="120px" size="mini">
+    <el-form-item label="上级权限名称">
+        <!-- :change-on-select="change" -->
+      <el-cascader
+        :options="powerLists"
+        :props="props"
+        change-on-select
+        clearable
+        :show-all-levels="false"
+        :style="{width:'50%'}"
+        @change="handlePowerChange"
+      ></el-cascader>
+        <!-- @active-item-change="handlePowerChange" -->
+      <!-- <el-input v-model="tableData.authName"></el-input> -->
+    </el-form-item>
     <el-form-item label="权限地址名称">
       <el-input v-model="tableData.authName"></el-input>
     </el-form-item>
@@ -93,25 +108,58 @@
 </template>
 
 <script>
+  import {powerList,powerAdd,powerUpdate,powerStop} from '@/api/adminManage.js'
   export default {
     name:'edit',
     props:{
       defaultData:{
         type:Object,
         default:()=>{return {}}
+      },
+      power:{
+        type:Array,
+        default:()=>{return []}
       }
     },
     data() {
       
       return {
-        tableData: this.defaultData
+        tableData: this.defaultData,
+        powerLists:this.power,
+        props:{
+          value: 'id',
+          label:'authName',
+          children: 'children'
+        },
+        change:false
       }
     },
     methods: {
       addHandler(){
         // console.log(row,'tinajiadeliria')
         this.$emit('addChild',this.tableData)
+      },
+      handlePowerChange(val){
+        console.log('val',val)
+        if(val.length > 0){
+          this.tableData.parentId = val[val.length]
+        }else{
+          this.tableData.parentId = 0
+        }
+        // powerList(0).then(res=>{
+        //   if(res.code === '0000' && res.data.length > 0){
+        //     res.data.forEach(item => {
+        //       item.value = item.id
+        //       item.label = item.authName
+        //     });
+        //     vm.powerLists = res.data
+        //     // console.log('val',vm.powerLists)
+        //   }
+        // })
       }
+    },
+    created () {
+      // this.getPower()
     }
   }
 </script>

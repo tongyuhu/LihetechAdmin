@@ -4,14 +4,17 @@
     <el-form-item label="角色名称">
       <el-input v-model="tableData.roleName"></el-input>
     </el-form-item>
-    <el-form-item label="权限id集合,分割">
+    <!-- <el-form-item label="权限id集合,分割">
       <el-input v-model="tableData.authsId"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="描述">
       <el-input v-model="tableData.description"></el-input>
     </el-form-item>
     <el-form-item label="角色码">
       <el-input v-model="tableData.roleCode"></el-input>
+    </el-form-item>
+    <el-form-item label="权限分配">
+      <SelectPower v-model="tableData.authsId" @check="checkPower"></SelectPower>
     </el-form-item>
     
     
@@ -23,8 +26,10 @@
 </template>
 
 <script>
+  import SelectPower from '@/components/SelectPower'
   export default {
     name:'edit',
+    
     props:{
       defaultData:{
         type:Object,
@@ -33,6 +38,9 @@
       action:{
         type:String
       }
+    },
+    components:{
+      SelectPower
     },
     data() {
       
@@ -48,6 +56,9 @@
       update(){
         this.$emit('edit',this.tableData)
         // console.log(this.tableData,'tinajiadeliria')
+      },
+      checkPower(val){
+        this.tableData.authsId = val
       }
     }
   }

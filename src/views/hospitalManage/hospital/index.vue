@@ -52,37 +52,8 @@
             </template>
           </el-table-column> -->
           <el-table-column
-            prop="name"
-            label="管理员姓名">
-          </el-table-column>
-          <el-table-column
-            prop="mobile"
-            label="管理员手机号"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="email"
-            label="管理员邮箱"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="memberCount"
-            label="绑定患者人数"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
             prop="hospitalName"
             label="医院名称"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="username"
-            label="管理员用户名"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="department"
-            label="职务"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -90,6 +61,42 @@
             label="医院地址"
             show-overflow-tooltip>
           </el-table-column>
+          <el-table-column
+            prop="name"
+            label="管理员">
+          </el-table-column>
+          <el-table-column
+            prop="mobile"
+            label="联系电话"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="email"
+            label="邮箱"
+            show-overflow-tooltip>
+          </el-table-column>
+          <!-- <el-table-column
+            prop="memberCount"
+            label="绑定患者人数"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <el-table-column
+            prop="doctorCount"
+            label="医生人数"
+            show-overflow-tooltip>
+          </el-table-column>
+          
+          <!-- <el-table-column
+            prop="username"
+            label="管理员用户名"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <!-- <el-table-column
+            prop="department"
+            label="职务"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          
           <el-table-column
             prop="joinTime"
             label="加入时间"
@@ -100,10 +107,10 @@
           </el-table-column>
 
           <el-table-column
-            label="是否启用"
+            label="账号状态"
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <span>{{scope.row.enabled === true ? "是":'否'}}</span>
+              <span>{{scope.row.enabled === true ? "开启":'关闭'}}</span>
             </template>
           </el-table-column>
 
@@ -132,7 +139,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog"
-    width="70%">
+    width="70%"
+    center>
+      <span slot="title">{{action+'医院'}}</span>
       <edit v-if="editDialog" @edit="editHandler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>

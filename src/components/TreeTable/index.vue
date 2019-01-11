@@ -80,22 +80,8 @@ export default {
     toggleExpanded: function(trIndex,row) {
       // this.expandChild()
       let vm =this
-      // let arr = []
-      // async function foo(){
-      //   await powerList(row.id).then(res=>{
-      //       arr = res.data
-      //       // vm.$set(vm.$data,'tableData',[...arr])
-      //       // console.log('daddsssssssss',res,vm.$data.tableData)
-      //     })
-      //     vm.$emit('expand',arr)
-      //   // console.log(vm.$children)
-      //   // vm.$child
-      // }
-      // foo()
-      
       const record = this.formatData[trIndex]
       record._expanded = !record._expanded
-      // console.log(1)
     },
     // 图标显示
     iconShow(index, record) {

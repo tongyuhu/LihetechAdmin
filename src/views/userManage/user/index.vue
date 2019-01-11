@@ -102,7 +102,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog" 
-    width="70%">
+    width="70%"
+    center>
+    <span slot="title">编辑用户</span>
       <edit v-if="editDialog" :defaultData="editData" @edit="editUserInfo"></edit>
     </el-dialog>
     <el-dialog 
@@ -111,6 +113,7 @@
     width="80%"
     center
     >
+      <span slot="title">用户详情</span>
       <info v-if="userInfoDialog" :defaultData="currentUserData"></info>
     </el-dialog>
   </div>

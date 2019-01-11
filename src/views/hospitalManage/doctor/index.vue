@@ -121,7 +121,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog"
-    width="70%">
+    width="70%"
+    center>
+    <span slot="title">{{action+'医生'}}</span>
       <edit v-if="editDialog" @edit="editHandler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>
@@ -130,6 +132,7 @@
 
 import edit from './edit'
 import {doctorList,doctorEdit,doctorAdd,doctorOnOff} from '@/api/hospitalManage.js'
+import {hospitalList} from '@/api/hospitalManage.js'
 export default {
   name:'hospital',
   components:{
@@ -145,7 +148,8 @@ export default {
       currentPage:1,
       pageSize:10,
       pageTotal:40,
-      multipleSelection:[]
+      multipleSelection:[],
+      
     }
   },
   created() {
@@ -289,6 +293,7 @@ export default {
     closeUsers(){
       this.openUsers(1)
     },
+    
   }
 }
 </script>

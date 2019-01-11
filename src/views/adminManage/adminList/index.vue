@@ -9,7 +9,7 @@
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler('add')">添加角色</el-button>
+          <el-button plain @click="addHandler('add')">添加管理员</el-button>
         </div>
       </div>
       <div>
@@ -46,12 +46,17 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="name"
+            label="管理员姓名"
+            show-overflow-tooltip>
+          </el-table-column>
+          <!-- <el-table-column
             prop="username"
             label="用户名">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="mobile"
-            label="电话"
+            label="联系电话"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -59,11 +64,7 @@
             label="邮箱"
             show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
-            prop="name"
-            label="用户姓名"
-            show-overflow-tooltip>
-          </el-table-column>
+          
           <!-- <el-table-column
             prop="idCardNo"
             label="证件号码"
@@ -74,15 +75,15 @@
             label="密码"
             show-overflow-tooltip>
           </el-table-column> -->
-          <el-table-column
+          <!-- <el-table-column
             prop="sex"
             label="性别"
             show-overflow-tooltip>
             <template slot-scope="scope">
               <span>{{scope.row.sex | sex}}</span>
             </template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             label="是否启用"
             show-overflow-tooltip>
             <template slot-scope="scope">
@@ -95,17 +96,17 @@
             <template slot-scope="scope">
               <span>{{scope.row.locked === true ? "是":'否'}}</span>
             </template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             prop="loginFailureCount"
             label="连续登录失败次数"
             show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             prop="lockedDate"
             label="锁定日期"
             show-overflow-tooltip>
-          </el-table-column>
+          </el-table-column> -->
           <!-- <el-table-column
             prop="loginIp"
             label="最后登录IP"
@@ -117,10 +118,15 @@
             show-overflow-tooltip>
           </el-table-column> -->
           <el-table-column
-            label="是否停用"
+            prop="createTime"
+            label="加入时间"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            label="账号状态"
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <span>{{scope.row.isStop === true ? "是":'否'}}</span>
+              <span>{{scope.row.isStop === true ? "停用":'开启'}}</span>
             </template>
           </el-table-column>
           <!-- <el-table-column
@@ -142,7 +148,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler('update',scope.row)">更新</el-button>
+                <el-button type="text" size="small" @click="addHandler('update',scope.row)">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -162,7 +168,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog"
-    width="70%">
+    width="70%"
+    center>
+      <span slot="title">{{action+'管理员'}}</span>
       <edit v-if="editDialog" @edit="editHanler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>
@@ -181,7 +189,7 @@ export default {
       editDialog:false,
       tableData:[],
       currentEdit:{},
-      action:'更新',
+      action:'编辑',
       searchData:'',
       currentPage:1,
       pageSize:10,
@@ -206,7 +214,7 @@ export default {
         }
       }
       if(action==='update'){
-        this.action = '更新'
+        this.action = '编辑'
         admin.password = ''
         this.currentEdit = admin
       }
@@ -216,6 +224,11 @@ export default {
       adminList(params).then(res=>{
         if(res.code === '0000'){
           this.tableData = res.data
+          res.data.forEach(item=>{
+            if(!item.rolesId){
+              item.rolesId === ''
+            }
+          })
           this.pageTotal = res.recordCount
         }
       })
@@ -239,7 +252,7 @@ export default {
           }
         })
       }
-      if(this.action==='更新'){
+      if(this.action==='编辑'){
         adminUpdate(admin).then(res=>{
           if(res.code==='0000'){
             this.tableData.forEach((item,index)=>{

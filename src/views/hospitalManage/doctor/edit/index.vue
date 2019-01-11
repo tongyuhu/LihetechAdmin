@@ -13,15 +13,26 @@
     <el-form-item label="原始密码">
       <el-input v-model="tableData.password"></el-input>
     </el-form-item>
-    <el-form-item label="所属医院的id">
+    <!-- <el-form-item label="所属医院的id">
       <el-input v-model="tableData.adminHospitalId"></el-input>
+    </el-form-item> -->
+    <el-form-item label="所属医院">
+      <el-select v-model="tableData.adminHospitalId" placeholder="请选择">
+        <el-option
+          v-for="item in hospitalList"
+          :key="item.id"
+          :label="item.hospitalName"
+          :value="item.id">
+        </el-option>
+      </el-select>
     </el-form-item>
+    
     <el-form-item label="邮箱">
       <el-input v-model="tableData.email"></el-input>
     </el-form-item>
-    <el-form-item label="主键编号" v-if="action === '编辑'">
+    <!-- <el-form-item label="主键编号" v-if="action === '编辑'">
       <el-input v-model="tableData.id"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <!-- <el-form-item label="当前用户版本号" v-if="action === '编辑'">
       <el-input v-model="tableData.version"></el-input>
     </el-form-item> -->
@@ -42,6 +53,8 @@
 </template>
 
 <script>
+  
+  import {hospitalList} from '@/api/hospitalManage.js'
   export default {
     name:'edit',
     props:{
@@ -53,20 +66,32 @@
         type:String
       }
     },
+    
     data() {
       
       return {
         tableData: this.defaultData,
+        hospitalList:[]
         // text:'更新'
       }
     },
     created () {
       this.$set(this.$data,'tableData',this.defaultData)
+      this.getHospitalList()
     },
     methods: {
       update(){
         this.$emit('edit',this.tableData)
         // console.log(this.tableData,'tinajiadeliria')
+      },
+      getHospitalList(){
+        let vm = this
+        hospitalList({
+          pageNum:1,
+          pageSize:9999
+        }).then(res=>{
+          vm.hospitalList = res.data
+        })
       }
     }
   }

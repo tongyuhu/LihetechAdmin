@@ -10,6 +10,8 @@ export default{
   editInfo:()=>import('@/views/infoManage/infoList/edit/index'),
   doctor:()=>import('@/views/sysLog/doctor/index'),
   user:()=>import('@/views/sysLog/user/index'),
+  doctor:()=>import('@/views/sysLog/doctor/index'),
+  admin:()=>import('@/views/sysLog/admin/index'),
   adminList:()=>import('@/views/adminManage/adminList/index'),
   power:()=>import('@/views/adminManage/power/index'),
   role:()=>import('@/views/adminManage/roles/index'),

@@ -13,27 +13,29 @@
     <el-form-item label="原始密码">
       <el-input v-model="tableData.password"></el-input>
     </el-form-item>
-    <el-form-item label="角色id集合,分割">
+    <!-- <el-form-item label="角色id集合,分割">
       <el-input v-model="tableData.rolesId"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="邮箱">
       <el-input v-model="tableData.email"></el-input>
     </el-form-item>
-    <el-form-item label="主键编号" v-if="action === '更新'">
+    <!-- <el-form-item label="主键编号" v-if="action === '编辑'">
       <el-input v-model="tableData.id"></el-input>
     </el-form-item>
-    <el-form-item label="当前用户版本号" v-if="action === '更新'">
+    <el-form-item label="当前用户版本号" v-if="action === '编辑'">
       <el-input v-model="tableData.version"></el-input>
+    </el-form-item> -->
+    <el-form-item label="角色分配">
+      <SelectRole v-model="tableData.rolesId" @check="changeRole"></SelectRole>
+      <!-- <SelectRole></SelectRole> -->
     </el-form-item>
-    <el-form-item label="账号开启或停用" v-if="action === '更新'">
+    <el-form-item label="账号开启或停用" v-if="action === '编辑'">
       <el-switch
         v-model="tableData.isStop"
         active-color="#ff4949"
         inactive-color="#13ce66">
       </el-switch>
     </el-form-item>
-    
-    
     <el-form-item size="mini">
       <el-button type="primary" @click="update">{{action}}</el-button>
     </el-form-item>
@@ -42,8 +44,12 @@
 </template>
 
 <script>
+  import SelectRole from '@/components/SelectRole'
   export default {
     name:'edit',
+    components: {
+      SelectRole
+    },
     props:{
       defaultData:{
         type:Object,
@@ -57,7 +63,7 @@
       
       return {
         tableData: this.defaultData,
-        // text:'更新'
+        // text:'编辑'
       }
     },
     created () {
@@ -67,6 +73,9 @@
       update(){
         this.$emit('edit',this.tableData)
         // console.log(this.tableData,'tinajiadeliria')
+      },
+      changeRole(val){
+        this.tableData.rolesId = val
       }
     }
   }

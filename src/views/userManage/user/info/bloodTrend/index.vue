@@ -380,7 +380,7 @@ export default {
           type: 'time',
           boundaryGap: false,
           minInterval: 3600 * 1000 * 24,
-          maxInterval: 60 * 60 * 1000 * 24,
+          maxInterval: 60 * 60 * 1000 * 24*7,
           min: vm.xstart,
           max: vm.xend,
           axisLabel: {
@@ -863,6 +863,7 @@ export default {
               this.xstart = ''
               this.end = ''
             }
+            
             // this.updatebloodTrendTotal(this.xstart, this.xend)
             resultBloodData.forEach((item, index) => {
               this.$set(this.bloodTrendData.date, index, item.measureTime)
@@ -938,6 +939,8 @@ export default {
               this.xstart = ''
               this.end = ''
             }
+            // this.xstart = '2019-01-08 00:00:00'
+            // this.end = '2019-01-08 24:00:00'
             // this.updatebloodTrendTotal(this.xstart, this.xend)
             resultBloodData.forEach((item, index) => {
               this.computeYearWeek(item.yearWeek)

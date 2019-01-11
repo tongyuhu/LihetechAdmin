@@ -25,9 +25,9 @@
     <el-form-item label="备注">
       <el-input v-model="tableData.authNote"></el-input>
     </el-form-item>
-    <el-form-item label="权限码">
+    <!-- <el-form-item label="权限码">
       <el-input v-model="tableData.authCode"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="图标">
       <el-input v-model="tableData.icon"></el-input>
     </el-form-item>

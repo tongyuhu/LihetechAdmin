@@ -3,10 +3,10 @@
   size="middle"
   ref="hospitalForm" label-width="100px" :inline="false">
     <el-form-item label="留言内容">
-      <el-input type="textarea" autosize readonly v-model="editForm.feedDesc"></el-input>
+      <el-input type="textarea" :autosize="{ minRows: 4}" readonly v-model="editForm.feedDesc"></el-input>
     </el-form-item>
     <el-form-item label="处理建议">
-      <el-input type="textarea" autosize v-model="editForm.dealWithContent"></el-input>
+      <el-input type="textarea" :autosize="{ minRows: 6}" v-model="editForm.dealWithContent"></el-input>
     </el-form-item>
     <div class="action-btn">
       <el-button type="primary" @click="submitForm('hospitalForm')">提交</el-button>

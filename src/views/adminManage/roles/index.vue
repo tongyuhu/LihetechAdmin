@@ -28,9 +28,14 @@
             label="描述"
             show-overflow-tooltip>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="authsId"
             label="权限id集合"
+            show-overflow-tooltip>
+          </el-table-column> -->
+          <el-table-column
+            prop="authName"
+            label="权限名称集合"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -62,7 +67,9 @@
     <el-dialog 
     title="" 
     :visible.sync="editDialog"
-    width="70%">
+    width="70%"
+    center>
+      <span slot="title">{{action+"角色"}}</span>
       <edit v-if="editDialog" @edit="editHanler" :defaultData="currentEdit" :action="action"></edit>
     </el-dialog>
   </div>

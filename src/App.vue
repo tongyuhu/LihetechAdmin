@@ -11,6 +11,7 @@ export default{
     // this.$router.push({path:'/'})
     // console.log(this.$router)
     this.$store.dispatch('LoginByUsername')
+    // this.$store.dispatch('GetUserRouter')
   }
 }
 </script>

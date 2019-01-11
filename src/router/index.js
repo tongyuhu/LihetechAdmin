@@ -189,7 +189,13 @@ const ServerRouter = [
         name: 'user',
         component: 'user',
         meta: { title: '用户操作日志' }
-      }
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: 'admin',
+        meta: { title: '管理员操作日志' }
+      },
     ]
   },
   {

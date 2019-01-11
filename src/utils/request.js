@@ -85,6 +85,7 @@ service.interceptors.response.use(
           break
 
         case 403:
+          window.location.href = 'http://192.168.2.131:8082/operat/login'
           error.message = '拒绝访问'
           break
 
