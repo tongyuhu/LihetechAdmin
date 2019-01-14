@@ -9,7 +9,7 @@
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler">添加资讯</el-button>
+          <el-button plain @click="addHandler(false)">添加资讯</el-button>
           <el-button plain @click="deleteHandle">批量删除</el-button>
         </div>
         <div class="hospital-num">
@@ -42,11 +42,17 @@
             prop="inforTypeSmall"
             label="资讯分类"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              {{scope.row.inforTypeSmall|inforSmall}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="inforTypeBig"
             label="视频大分类"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              {{scope.row.inforTypeBig|inforBig}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="readNum"
@@ -67,7 +73,7 @@
             label="操作"
             width="100">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
+                <el-button type="text" size="small" @click="addHandler(scope.row)">编辑</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -112,6 +118,47 @@ export default {
   name:'hospital',
   components:{
     edit
+  },
+  filters: {
+    inforSmall: function (value) {
+      if (!value) return ''
+      let text = ''
+      switch (value) {
+        case 1:
+          text = '基础知识' 
+          break;
+        case 2:
+          text = '生活管理 ' 
+          break;
+        case 3:
+          text = '视频讲座 ' 
+          break;
+        case 4:
+          text = '并发症 ' 
+          break;
+      
+        default:
+          text = ''
+          break;
+      }
+      return text
+    },
+    inforBig: function (value) {
+      if (!value) return ''
+      let text = ''
+      switch (value) {
+        case 1:
+          text = '高血压' 
+          break;
+        case 2:
+          text = '糖尿病 ' 
+          break;
+        default:
+          text = ''
+          break;
+      }
+      return text
+    }
   },
   data() {
     return {
@@ -170,9 +217,13 @@ export default {
       console.log(`当前页: ${val}`);
     },
     searchHandler(){},
-    addHandler(){
-      // this.editDialog=true
-      this.$router.push({ name: 'editInfo', params: {  }})
+    addHandler(val){
+      console.log('info',val)
+      if(val){
+        this.$router.push({ name: 'editInfo', params: val})
+      }else{
+        this.$router.push({ name: 'editInfo', params: {}})
+      }
     },
     deleteHandle(){
       if(this.multipleSelection.length>0){

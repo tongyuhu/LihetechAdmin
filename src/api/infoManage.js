@@ -7,3 +7,18 @@ export function infoList(data) {
     data: data
   })
 }
+export function infoAdd(data) {
+  let params = {
+    inforTitle: data.inforTitle,
+    inforDesc: data.inforDesc,
+    inforTypeSmall: data.inforTypeSmall,
+    inforTypeBig:data.inforTypeBig,
+    inforContent: data.inforContent,
+    inforImgUrl:data.inforImgUrl
+  }
+  return request({
+    url: '/article/info/add',
+    method: 'post',
+    data: params
+  })
+}
