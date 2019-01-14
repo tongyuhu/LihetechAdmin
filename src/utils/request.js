@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import qs from 'qs'
+import {logout} from '@/api/logout.js'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api 的 base_url
@@ -54,7 +55,9 @@ service.interceptors.response.use(
     // })
     const res = response.data
     if (res.code === '1005') {
-      window.location.href = '/operat/login'
+      logout().then(res=>{
+        window.location.href = '/operat/login'
+      })
       return Promise.reject('error')
     } else if(res.code === '1101') {
       Message({
@@ -62,7 +65,9 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-      window.location.href = '/operat/login'
+      logout().then(res=>{
+        window.location.href = '/operat/login'
+      })
     } else if(res.code === '1102') {
       Message({
         message: '数据更新，请重新登录',
@@ -91,7 +96,9 @@ service.interceptors.response.use(
           break
 
         case 403:
-          window.location.href = '/operat/login'
+          logout().then(res=>{
+            window.location.href = '/operat/login'
+          })
           error.message = '拒绝访问'
           break
 
