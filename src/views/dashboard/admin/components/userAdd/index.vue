@@ -167,6 +167,7 @@ export default {
     ago(){
       if(this.pageNum < this.pages){
         this.pageNum ++
+        this.btnNext = false
       }
       if(this.pageNum === this.pages){
         this.btnPre = true
@@ -179,6 +180,7 @@ export default {
     next(){
       if(this.pageNum > 1){
         this.pageNum --
+        this.btnPre = false
       }
       if(this.pageNum === 1){
         this.btnNext = true
