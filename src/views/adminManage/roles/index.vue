@@ -36,7 +36,16 @@
           <el-table-column
             prop="authName"
             label="权限名称集合"
-            show-overflow-tooltip>
+            >
+
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="dark" placement="bottom">
+                <span slot="content" class="long-text">{{scope.row.authName}}</span>
+                <span>{{scope.row.authName.slice(0,10)}}</span>
+              <!-- <el-button>下左</el-button> -->
+            </el-tooltip>
+              
+            </template>
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -187,4 +196,37 @@ export default {
   .center-text{
     text-align: center;
   }
+  .long-text{
+    // display: inline-block;
+    // max-width: 80%;
+    // padding:0 30px;
+    // text-align: center;
+  }
+  .item{
+    // display: inline-block;
+    // max-width: 50%;
+  }
+  // .popper-class{
+  //   position: absolute;
+  //   border-radius: 4px;
+  //   padding: 10px;
+  //   z-index: 2000;
+  //   font-size: 12px;
+  //   line-height: 1.2;
+  //   min-width: 10px;
+  //   max-width: 80%;
+  // }
 </style>
+<style>
+.el-tooltip__popper{
+  position: absolute;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 2000;
+  font-size: 12px;
+  line-height: 1.2;
+  min-width: 10px;
+  max-width: 80%;
+}
+</style>
+
