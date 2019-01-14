@@ -187,6 +187,7 @@ export default {
             message: '修改成功',
             type: 'success'
           })
+          this.editDialog = false
         }else{
           vm.$message({
             message: res.msg,

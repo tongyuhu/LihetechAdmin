@@ -296,6 +296,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
+            this.addDialog = false
           }else{
             vm.$message({
               message: '添加失败',
@@ -313,6 +314,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
+            this.addDialog = false
           }else{
             vm.$message({
               message: '添加失败',
@@ -336,6 +338,7 @@ export default {
             message: '更新成功',
             type: 'success'
           })
+          this.updateDialog = false
         }else{
           vm.$message({
             message: '更新失败',

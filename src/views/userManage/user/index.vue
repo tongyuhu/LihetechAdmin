@@ -182,12 +182,14 @@ export default {
     },
     editUserInfo(user){
       let vm = this
+      console.log('编辑的用户',user)
       editUser(user).then(res=>{
         if(res.code === '0000'){
           this.$message({
             message: '修改成功',
             type: 'success'
           })
+          // this.editDialog = false
           async function getdata() {
             await vm.getData()
             vm.editDialog = false

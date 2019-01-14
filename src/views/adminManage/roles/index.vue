@@ -139,6 +139,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
+            this.editDialog = false
           }else{
             vm.$message({
               message: '添加失败',
