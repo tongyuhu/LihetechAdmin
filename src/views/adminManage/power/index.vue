@@ -333,12 +333,11 @@ export default {
         if(res.code === '0000'){
           let arr = updateChild(vm.tableData,child)
           vm.$set(vm.$data,'tableData',[...arr])
-          vm.updateDialog = false
           vm.$message({
             message: '更新成功',
             type: 'success'
           })
-          this.updateDialog = false
+          vm.updateDialog = false
         }else{
           vm.$message({
             message: '更新失败',

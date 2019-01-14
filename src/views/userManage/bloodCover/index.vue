@@ -94,7 +94,7 @@ export default {
             name: '高血压',
             type: 'pie',
             radius: '70%',
-            center: ['50%', '40%'],
+            center: ['50%', '50%'],
             data: vm.chartData,
             label: {
               normal: {
