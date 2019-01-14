@@ -17,7 +17,7 @@ export function editUser(data) {
     mobile:data.mobile,
     doctorId:data.doctorId,
     isStop:data.isStop,
-    userId:data.userId
+    userId:data.id
   }
   return request({
     url: '/userManage/user/basic/edit',
