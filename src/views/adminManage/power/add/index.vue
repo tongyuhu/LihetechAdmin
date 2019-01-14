@@ -146,16 +146,6 @@
         }else{
           this.tableData.parentId = 0
         }
-        // powerList(0).then(res=>{
-        //   if(res.code === '0000' && res.data.length > 0){
-        //     res.data.forEach(item => {
-        //       item.value = item.id
-        //       item.label = item.authName
-        //     });
-        //     vm.powerLists = res.data
-        //     // console.log('val',vm.powerLists)
-        //   }
-        // })
       }
     },
     created () {

@@ -2,6 +2,17 @@
 <div class="box">
   <el-form ref="form" :model="tableData" label-width="120px" size="mini">
     <el-form-item label="权限地址名称">
+      <el-cascader
+        :options="powerLists"
+        :props="props"
+        change-on-select
+        clearable
+        :show-all-levels="false"
+        :style="{width:'50%'}"
+        @change="handlePowerChange"
+      ></el-cascader>
+    </el-form-item>
+    <el-form-item label="权限地址名称">
       <el-input v-model="tableData.authName"></el-input>
     </el-form-item>
     <el-form-item label="url地址">
@@ -47,12 +58,22 @@
       defaultData:{
         type:Object,
         default:()=>{return {}}
+      },
+      power:{
+        type:Array,
+        default:()=>{return []}
       }
     },
     data() {
       
       return {
-        tableData: this.defaultData
+        tableData: this.defaultData,
+        powerLists:this.power,
+        props:{
+          value: 'id',
+          label:'authName',
+          children: 'children'
+        },
       }
     },
     created () {
@@ -62,6 +83,14 @@
       update(){
         this.$emit('update',this.tableData)
         console.log(this.tableData,'tinajiadeliria')
+      },
+      handlePowerChange(val){
+        console.log('val',val)
+        if(val.length > 0){
+          this.tableData.parentId = val[val.length-1]
+        }else{
+          this.tableData.parentId = this.tableData.parentId
+        }
       }
     }
   }

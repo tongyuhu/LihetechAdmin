@@ -7,7 +7,7 @@
           <el-button plain @click="addHandler">添加权限</el-button>
         </div>
       </div>
-      <treeTable :data="tableData" :eval-func="func" alwaysShowExpandIcon :eval-args="args" :expand-all="expandAll">
+      <treeTable :data="tableData" :eval-func="func"  :eval-args="args" :expand-all="expandAll">
         <!-- <el-table-column label="" width="50">
           <template slot-scope="scope">
             <el-checkbox v-model="scope.row.isStop"></el-checkbox>
@@ -90,7 +90,7 @@
     width="60%"
     center>
       <span slot="title">更新权限</span>
-      <update  @update ="updateChildHandler" :defaultData="updateChildrenData"></update>
+      <update  @update ="updateChildHandler" :defaultData="updateChildrenData" :power="tableData"></update>
     </el-dialog>
     <el-dialog 
     title="" 
