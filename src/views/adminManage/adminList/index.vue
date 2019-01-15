@@ -179,6 +179,7 @@
 
 import edit from './edit'
 import {adminList,adminUpdate,adminAdd} from '@/api/adminManage.js'
+
 export default {
   name:'hospital',
   components:{
@@ -194,6 +195,7 @@ export default {
       currentPage:1,
       pageSize:10,
       pageTotal:40,
+      
     }
   },
   created() {
@@ -207,7 +209,7 @@ export default {
       if(action==='add'){
         this.action = '添加'
         this.currentEdit = {
-          // roleName:null,
+          rolesId:null,
           // authsId:null,
           // description:null,
           // roleCode:null
@@ -239,7 +241,10 @@ export default {
         console.log('add',admin)
         adminAdd(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.unshift(admin)
+            vm.getData({
+              pageNum:this.currentPage,
+              pageSize:this.pageSize,
+            })
             vm.$message({
               message: '添加成功',
               type: 'success'
@@ -256,10 +261,9 @@ export default {
       if(this.action==='编辑'){
         adminUpdate(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.forEach((item,index)=>{
-              if(item.id === admin.id){
-                this.tableData.splice(index,1,admin)
-              }
+            vm.getData({
+              pageNum:this.currentPage,
+              pageSize:this.pageSize,
             })
             vm.$message({
               message: '更新成功',

@@ -190,7 +190,11 @@ export default {
         console.log('add',admin)
         doctorAdd(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.unshift(admin)
+            // this.tableData.unshift(admin)
+            this.getData({
+              pageSize:this.pageSize,
+              pageNum:this.currentPage
+            })
             vm.$message({
               message: '添加成功',
               type: 'success'
@@ -207,11 +211,16 @@ export default {
       if(this.action==='编辑'){
         doctorEdit(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.forEach((item,index)=>{
-              if(item.id === admin.id){
-                this.tableData.splice(index,1,admin)
-              }
+            // this.tableData.forEach((item,index)=>{
+            //   if(item.id === admin.id){
+            //     this.tableData.splice(index,1,admin)
+            //   }
+            // })
+            this.getData({
+              pageSize:this.pageSize,
+              pageNum:this.currentPage
             })
+            this.editDialog = false
             vm.$message({
               message: '编辑成功',
               type: 'success'

@@ -64,7 +64,7 @@ export function hospitalEdit(data) {
     name:data.name,
     email:data.email,
     password:data.password,
-    department:data.department,
+    department:data.hospitalName,
     address:data.address,
     id:data.id,
     isStop:data.isStop,

@@ -1,57 +1,5 @@
 <template>
-  <!-- <el-table
-    :data="defaultData"
-    style="width: 100%">
-    <el-table-column label="权限地址名称" width="120">
-          <template slot-scope="scope">
-            <span>{{ scope.row.authName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="权限码" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.authCode }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="url地址" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.authUrl }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="图标" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.icon }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="权限码" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.authCode }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="类型 " >
-          <template slot-scope="scope">
-            <span>{{ scope.row.authType === 1 ? '页面' :'按钮'}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="备注" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.authNote }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="停用" >
-          <template slot-scope="scope">
-            <span>{{ scope.row.isStop===true ? '是':'否'}}</span>
-          </template>
-        </el-table-column>
-    
-    <el-table-column
-      label="添加">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.add" @change="addHandler(scope.row)"></el-checkbox>
-      </template>
-    </el-table-column>
-  </el-table> -->
-  
-  <el-form ref="form" :model="tableData" label-width="120px" size="mini">
+  <el-form ref="powerAddForm" :model="tableData" label-width="120px" size="mini" :rules="rules">
     <el-form-item label="上级权限名称">
         <!-- :change-on-select="change" -->
       <el-cascader
@@ -66,16 +14,16 @@
         <!-- @active-item-change="handlePowerChange" -->
       <!-- <el-input v-model="tableData.authName"></el-input> -->
     </el-form-item>
-    <el-form-item label="权限地址名称">
+    <el-form-item label="权限地址名称" prop="authName">
       <el-input v-model="tableData.authName"></el-input>
     </el-form-item>
-    <el-form-item label="url地址">
+    <el-form-item label="url地址" prop="authUrl">
       <el-input v-model="tableData.authUrl"></el-input>
     </el-form-item>
     <!-- <el-form-item label="类型">
       <el-input v-model="tableData.authType"></el-input>
     </el-form-item> -->
-    <el-form-item label="类型">
+    <el-form-item label="类型" prop="authType">
       <el-select v-model="tableData.authType" placeholder="请选择">
         <el-option
           label="页面权限"
@@ -90,7 +38,7 @@
     <el-form-item label="备注">
       <el-input v-model="tableData.authNote"></el-input>
     </el-form-item>
-    <el-form-item label="权限码">
+    <el-form-item label="权限码" prop="authCode">
       <el-input v-model="tableData.authCode"></el-input>
     </el-form-item>
     <el-form-item label="图标">
@@ -102,13 +50,14 @@
     
     
     <el-form-item size="mini">
-      <el-button type="primary" @click="addHandler">添加</el-button>
+      <el-button type="primary" @click="addHandler('powerAddForm')">添加</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
   import {powerList,powerAdd,powerUpdate,powerStop} from '@/api/adminManage.js'
+  import {checkPass,checkPhone,checkUserName,checkEmail,checkName} from '@/utils/formCheck.js'
   export default {
     name:'edit',
     props:{
@@ -131,13 +80,53 @@
           label:'authName',
           children: 'children'
         },
-        change:false
+        change:false,
+        rules: {
+          username: [
+            { validator: checkUserName, trigger: ['blur', 'change'] },
+            {required: true}
+          ],
+          mobile: [
+            { validator: checkPhone, trigger: ['blur', 'change']},
+            {required: true}
+          ],
+          authName: [
+            { validator: checkName, trigger: ['blur', 'change'] },
+            {required: true}
+          ],
+          authUrl: [
+            { validator: checkName, trigger: ['blur', 'change'] },
+            {required: true}
+          ],
+          password: [
+            { validator: checkPass, trigger: ['blur', 'change']},
+            {required: true}
+          ],
+          email: [
+            { validator: checkEmail, trigger: ['blur', 'change'] },
+            {required: true}
+          ],
+          authType: [
+            { required: true, message: '请选择', trigger:  ['blur', 'change']}
+          ],
+          authCode: [
+            { required: true, message: '不能为空', trigger:  ['blur', 'change']}
+          ]
+        },
       }
     },
     methods: {
-      addHandler(){
+      addHandler(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$emit('addChild',this.tableData)
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
         // console.log(row,'tinajiadeliria')
-        this.$emit('addChild',this.tableData)
+        
       },
       handlePowerChange(val){
         console.log('val',val)

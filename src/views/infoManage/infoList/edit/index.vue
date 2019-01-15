@@ -7,11 +7,11 @@
     <div class="title">
       <span>编辑资讯</span>
     </div>
-    <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="资讯标题">
+    <el-form ref="form" :model="form" :rules="rules"  label-width="80px">
+          <el-form-item label="资讯标题" prop="inforTitle">
             <el-input v-model="form.inforTitle"></el-input>
           </el-form-item>
-          <el-form-item label="资讯简述">
+          <el-form-item label="资讯简述" prop="inforDesc">
             <el-input placeholder="请输入内容"
             type="textarea"
             :rows="2"
@@ -51,7 +51,7 @@
         <tinymce :height="300" v-model="form.inforContent"/>
       </div>
       <el-form-item label-width="15px">
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
         <!-- <el-button>取消</el-button> -->
       </el-form-item>
     </el-form>
@@ -66,6 +66,7 @@
 import Tinymce from '@/components/Tinymce'
 import {upload} from '@/api/commons/upload.js'
 import {infoAdd} from '@/api/infoManage.js'
+import {checkPass,checkPhone,checkUserName,checkEmail,checkName,checkNumber} from '@/utils/formCheck.js'
 export default {
   name: 'TinymceDemo',
   components: { Tinymce },
@@ -83,19 +84,42 @@ export default {
         inforContent: '',
         inforImgUrl:''
       },
+      rules: {
+          inforTitle: [
+            { validator: checkName, trigger: ['blur', 'change'] }
+          ],
+          inforDesc: [
+            { validator: checkName, trigger: ['blur', 'change'] }
+          ],
+        },
     }
   },
   methods:{
-    onSubmit(){
+    onSubmit(formName){
       console.log('submit!',this.form);
-      infoAdd(this.form).then(res=>{
-        if(res.code === '0000'){
-          this.$message({
-          message: '添加成功',
-          type: 'success'
-        });
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          infoAdd(this.form).then(res=>{
+            if(res.code === '0000'){
+              this.$message({
+              message: '添加成功',
+              type: 'success'
+            });
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
+      // infoAdd(this.form).then(res=>{
+      //   if(res.code === '0000'){
+      //     this.$message({
+      //     message: '添加成功',
+      //     type: 'success'
+      //   });
+      //   }
+      // })
       // console.log('route!',this.$route.params);
       // console.log('route!',this.$route);
     },

@@ -15,7 +15,7 @@ export function editUser(data) {
     height:data.height,
     weight:data.weight,
     mobile:data.mobile,
-    doctorId:data.doctorId,
+    doctorId:data.adminIdMainDoctor,
     isStop:data.isStop,
     userId:data.id
   }

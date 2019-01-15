@@ -179,6 +179,14 @@ export default {
       if(action==='add'){
         this.action = '添加'
         this.currentEdit = {
+          username:"",
+          mobile:"",
+          hospitalName:"",
+          password:"",
+          email:'',
+          department:"",
+          address:'',
+          // isStop:false
         }
       }
       if(action==='update'){
@@ -202,7 +210,10 @@ export default {
         console.log('add',admin)
         hospitalAdd(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.unshift(admin)
+            this.getData({
+              pageNum:this.currentPage,
+              pageSize:this.pageSize,
+            })
             vm.$message({
               message: '添加成功',
               type: 'success'
@@ -219,11 +230,11 @@ export default {
       if(this.action==='编辑'){
         hospitalEdit(admin).then(res=>{
           if(res.code==='0000'){
-            this.tableData.forEach((item,index)=>{
-              if(item.id === admin.id){
-                this.tableData.splice(index,1,admin)
-              }
+            this.getData({
+              pageNum:this.currentPage,
+              pageSize:this.pageSize,
             })
+            this.editDialog = false
             vm.$message({
               message: '编辑成功',
               type: 'success'
