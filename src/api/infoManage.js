@@ -22,3 +22,19 @@ export function infoAdd(data) {
     data: params
   })
 }
+export function infoEdit(data) {
+  let params = {
+    inforTitle: data.inforTitle,
+    inforDesc: data.inforDesc,
+    inforTypeSmall: data.inforTypeSmall,
+    inforTypeBig:data.inforTypeBig,
+    inforContent: data.inforContent,
+    inforImgUrl:data.inforImgUrl,
+    id:data.id
+  }
+  return request({
+    url: '/article/info/add',
+    method: 'post',
+    data: params
+  })
+}

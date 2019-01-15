@@ -165,36 +165,6 @@ export default {
       searchData:'',
       editDialog:false,
       tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
       ],
       multipleSelection: [],
       currentPage:1,
@@ -220,9 +190,9 @@ export default {
     addHandler(val){
       console.log('info',val)
       if(val){
-        this.$router.push({ name: 'editInfo', params: val})
+        this.$router.push({ name: 'editInfo', params: {data:val,type:'edit'}})
       }else{
-        this.$router.push({ name: 'editInfo', params: {}})
+        this.$router.push({ name: 'editInfo', params: {type:'add',data:{}}})
       }
     },
     deleteHandle(){

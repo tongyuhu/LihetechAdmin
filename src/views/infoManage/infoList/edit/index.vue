@@ -65,7 +65,7 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 import {upload} from '@/api/commons/upload.js'
-import {infoAdd} from '@/api/infoManage.js'
+import {infoAdd,infoEdit} from '@/api/infoManage.js'
 import {checkPass,checkPhone,checkUserName,checkEmail,checkName,checkNumber} from '@/utils/formCheck.js'
 export default {
   name: 'TinymceDemo',
@@ -82,7 +82,8 @@ export default {
         inforTypeSmall: '',
         inforTypeBig:'',
         inforContent: '',
-        inforImgUrl:''
+        inforImgUrl:'',
+        id:''
       },
       rules: {
           inforTitle: [
@@ -96,32 +97,35 @@ export default {
   },
   methods:{
     onSubmit(formName){
+      let vm = this
       console.log('submit!',this.form);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          infoAdd(this.form).then(res=>{
-            if(res.code === '0000'){
-              this.$message({
-              message: '添加成功',
-              type: 'success'
-            });
-            }
-          })
+          if(vm.$route.params.type === 'edit'){
+            infoEdit(this.form).then(res=>{
+              if(res.code === '0000'){
+                this.$message({
+                message: '添加成功',
+                type: 'success'
+              });
+              }
+            })
+          }else{
+            infoAdd(this.form).then(res=>{
+              if(res.code === '0000'){
+                this.$message({
+                message: '添加成功',
+                type: 'success'
+              });
+              }
+            })
+          }
+          
         } else {
           console.log('error submit!!');
           return false;
         }
       });
-      // infoAdd(this.form).then(res=>{
-      //   if(res.code === '0000'){
-      //     this.$message({
-      //     message: '添加成功',
-      //     type: 'success'
-      //   });
-      //   }
-      // })
-      // console.log('route!',this.$route.params);
-      // console.log('route!',this.$route);
     },
     httpUpload(val){
       // console.log(val)
@@ -142,9 +146,9 @@ export default {
     },
   },
   created () {
-    this.form={...this.$route.params}
-    console.log('route!',this.$route.params);
-    console.log('route!',this.$route);
+    this.form={...this.$route.params.data}
+    // console.log('route!',this.$route.params);
+    // console.log('route!',this.$route);
   } 
 }
 </script>
