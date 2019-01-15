@@ -20,7 +20,7 @@
         </div>
         <!-- 状态选择 -->
         <div class="check-status">
-          <span>测量状态统计：</span>
+          <span>测量场景统计：</span>
           <span class="status-span">
             <f-button
             :width="75"
@@ -32,7 +32,7 @@
             {{item.label}}
             </f-button>
           </span>
-          <span>用药效果统计：</span>
+          <span>用药状态统计：</span>
           <span>
             <f-button
             :width="90"
