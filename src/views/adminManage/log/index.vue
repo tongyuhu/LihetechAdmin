@@ -2,8 +2,8 @@
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
-        <el-input placeholder=" 输入管理员名称、电话、邮箱" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索</span>
+        <el-input placeholder=" 输入姓名、电话、邮箱" v-model="searchData" class="input-with-select">
+          <span slot="prepend">搜索查询</span>
           <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
         </el-input>
       </div>
@@ -21,70 +21,58 @@
           ref="multipleTable"
           :data="tableData"
           tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
+          style="width: 100%">
           <el-table-column
-            type="selection"
+            type="index"
             width="55">
           </el-table-column>
           <el-table-column
-            prop="hospitalName"
+            prop="name"
             label="管理员姓名"
-            width="120">
-            <template slot-scope="scope">{{ scope.row.hospitalName }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="联系电话"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="admin"
-            label="邮箱"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="mobile"
             label="联系电话"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="email"
+            label="邮箱"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="loginIp"
+            label="登录ip"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="notes"
+            label="操作备注">
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="操作时间">
+          </el-table-column>
+          
+          <!-- <el-table-column
+            prop="phone"
             label="登录IP"
             show-overflow-tooltip>
           </el-table-column>
+          
+          
           <el-table-column
-            prop="doctorAccount"
-            label="医生账号"
+            prop="rolesId"
+            label="角色id"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="jionTime"
-            label="管理员类型"
+            prop="userId"
+            label="用户id"
             show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="操作类型"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="操作备注"
-            show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="操作时间"
-            show-overflow-tooltip>
-          </el-table-column>
-          <!-- <el-table-column
-            label="操作"
-            width="100">
-              <template slot-scope="scope">
-                <el-button type="text" size="small" @click="addHandler">编辑</el-button>
-              </template>
           </el-table-column> -->
+          
         </el-table>
         <div class="page-wrap">
           <el-pagination
@@ -99,111 +87,76 @@
         </div>
       </div>
     </el-card>
-    <el-dialog 
-    title="" 
-    :visible.sync="editDialog" 
-    width="70%">
-      <edit @closeDialog="closeHospitalDialog" :defaultData="currentHospital"></edit>
-    </el-dialog>
-    <el-dialog 
-    title="" 
-    :visible.sync="deleteConfirm" 
-    width="50%"
-    center
-    >
-    <div class="center-text">
-      <el-button type="primary" @click="deleteConfirmHandler">确定</el-button>
-      <el-button type="default" @click="deleteConfirm=false">取消</el-button>
-    </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import edit from './edit'
+import {adminLogList,doctorLogList,userLogList} from '@/api/sysManage'
 export default {
   name:'hospital',
   components:{
-    edit
   },
   data() {
     return {
       searchData:'',
-      editDialog:false,
       tableData:[
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        },
-        {
-          hospitalName: '立阖泰',
-          address: '上海市普陀区金沙江路 1518 弄',
-          admin:'张文纪',
-          phone:'1520365259',
-          email:"125@qq.com",
-          doctorAccount:"3",
-          jionTime:"2015-2-5",
-          status:'禁用'
-        }
       ],
-      multipleSelection: [],
       currentPage:1,
-      pageSize:1,
-      pageTotal:40,
-      deleteConfirm:false,
-      currentHospital:{}
+      pageSize:10,
+      pageTotal:0,
     }
   },
   created() {
+    this.getData()
   },
   methods: {
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    logintype(type){
+      let role = ''
+      switch (type) {
+        case 1:
+          role = '用户登陆'
+          break;
+        case 2:
+          role = '医生医院登陆'
+          break;
+        case 3:
+          role = '管理员登陆'
+          break;
+      
+        default:
+          break;
+      }
+      return role
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.pageSize = val
+      this.getData()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.pageNum = val
+      this.getData()
     },
-    searchHandler(){},
-    addHandler(){
-      this.editDialog=true
-    },
-    deleteHandle(){
-      if(this.multipleSelection.length>0){
-        this.deleteConfirm = true
-      }else{
-        this.$message({
-          message: '请选择医院',
-          type: 'warning'
-        });
-      }
-    },
-    closeHospitalDialog(){
-      this.editDialog = false
-    },
-    deleteConfirmHandler(){
-      this.deleteConfirm = false
+    searchHandler(){
+      this.pageNum = 1
+      this.getData()
     },
     getData(){
-
+      let vm = this
+      let params = {
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
+      }
+      if(this.searchData){
+        params.fields = this.searchData
+      }
+      adminLogList(params).then(res=>{
+        if(res.code === '0000') { 
+          vm.tableData = res.data
+          vm.pageTotal = res.recordCount
+        }
+      })
     }
   }
 }
