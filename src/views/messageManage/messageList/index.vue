@@ -10,7 +10,7 @@
       <div class="button-wrap">
         <div>
           <!-- <el-button plain @click="addHandler">添加医院</el-button> -->
-          <el-button plain @click="deleteHandle">批量删除</el-button>
+          <!-- <el-button plain @click="deleteHandle">批量删除</el-button> -->
         </div>
         <div class="hospital-num">
           <span>意见：共{{pageTotal}}</span>  
@@ -24,7 +24,7 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
-            type="selection"
+            type="index"
             width="55">
           </el-table-column>
           <el-table-column
@@ -89,7 +89,7 @@
     width="70%"
     center>
       <span slot="title">处理建议</span>
-      <edit @edit="editSuggest" v-if="editDialog" :suggest="currentSuggest"></edit>
+      <edit @edit="editSuggest" v-if="editDialog" :suggest="currentSuggest" @closeDialog="closeDialog"></edit>
     </el-dialog>
     <el-dialog 
     title="" 
@@ -121,7 +121,7 @@ export default {
       ],
       multipleSelection: [],
       currentPage:1,
-      pageSize:1,
+      pageSize:10,
       pageTotal:0,
       deleteConfirm:false,
       currentSuggest:{}
@@ -141,10 +141,13 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.pageNum = val
+      this.currentPage = val
       this.getData()
     },
-    searchHandler(){},
+    searchHandler(){
+      this.currentPage = 1
+      this.getData()
+    },
     editHandler(val){
       this.currentSuggest = val
       this.editDialog=true
@@ -166,7 +169,7 @@ export default {
     getData(){
       let vm = this
       let params = {
-        pageNum:vm.pageNum,
+        pageNum:vm.currentPage,
         pageSize:vm.pageSize
       }
       if(vm.searchData){
@@ -195,6 +198,9 @@ export default {
           })
         }
       })
+    },
+    closeDialog(){
+      this.editDialog = false
     }
   }
 }

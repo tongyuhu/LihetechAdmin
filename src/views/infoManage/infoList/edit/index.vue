@@ -138,7 +138,8 @@ export default {
           //   url:res.data.seeFile,
           //   size:res.data.size
           // })
-          this.form.inforImgUrl = res.data.seeFile
+          this.$set(this.form,'inforImgUrl',res.data.seeFile)
+          // this.form.inforImgUrl = res.data.seeFile
         }else{
           this.$message(res.msg)
         }

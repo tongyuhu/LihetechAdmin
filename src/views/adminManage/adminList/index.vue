@@ -46,14 +46,15 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="username"
+            label="用户名">
+          </el-table-column>
+          <el-table-column
             prop="name"
             label="管理员姓名"
             show-overflow-tooltip>
           </el-table-column>
-          <!-- <el-table-column
-            prop="username"
-            label="用户名">
-          </el-table-column> -->
+          
           <el-table-column
             prop="mobile"
             label="联系电话"

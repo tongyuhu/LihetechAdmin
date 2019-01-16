@@ -13,14 +13,14 @@ export let checkPass = (rule, value, callback) => {
   }
 }
 export let checkUserName = (rule, value, callback) => {
-  let patrn = /\w{6,17}$/
+  let patrn = /\w{1,17}$/
   if(!value){
     callback(new Error('不能为空'));
     // console.log('exec',value,patrn.exec(value))
   }else{
     // console.log('exec',value,patrn.exec(value))
     if (patrn.exec(value) === null) {
-      callback(new Error('请输入6~18位字符,可包含数字、字母、下划线'));
+      callback(new Error('请输入1~18位字符,可包含数字、字母、下划线'));
     }else{
       callback();
     }

@@ -16,7 +16,7 @@ export function doctorEdit(data) {
     adminHospitalId:data.adminHospitalId,
     email:data.email,
     id:data.id,
-    isStop:data.isStop,
+    isStop:!data.enabled,
   }
   return request({
     url: '/hospitalManage/doctor/update',
@@ -67,7 +67,7 @@ export function hospitalEdit(data) {
     department:data.hospitalName,
     address:data.address,
     id:data.id,
-    isStop:data.isStop,
+    isStop:!data.enabled,
   }
   return request({
     url: '/hospitalManage/hospital/update',

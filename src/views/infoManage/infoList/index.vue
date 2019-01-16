@@ -2,18 +2,46 @@
   <div class="wrap">
     <el-card :body-style="{'padding':'20px'}">
       <div class="search-wrap">
-        <el-input placeholder="请输入资讯标题" v-model="searchData" class="input-with-select">
-          <span slot="prepend">搜索资讯</span>
-          <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
-        </el-input>
+        <div>
+
+          <el-input placeholder="请输入资讯标题" v-model="searchData" class="input-with-select">
+            <span slot="prepend">搜索资讯</span>
+            <el-button slot="append" icon="el-icon-search" @click="searchHandler"></el-button>
+          </el-input>
+        </div>
+        <div>
+          <el-button plain @click="addHandler(false)">添加资讯</el-button>
+        </div>
       </div>
       <div class="button-wrap">
         <div>
-          <el-button plain @click="addHandler(false)">添加资讯</el-button>
-          <el-button plain @click="deleteHandle">批量删除</el-button>
+          <!-- <el-button plain @click="addHandler(false)">添加资讯</el-button> -->
+          <!-- <el-button plain @click="deleteHandle">批量停用</el-button>
+          <el-button plain @click="deleteHandle">批量启用</el-button> -->
         </div>
-        <div class="hospital-num">
+        <!-- <div class="hospital-num">
           <span>资讯：共240</span>  
+        </div> -->
+      </div>
+      <div class="button-wrap">
+        <div>
+          <el-form label-position="right" :inline="true" >
+            <el-form-item label="资讯类型">
+              <el-radio-group v-model="inforTypeSmall" @change="inforTypeSmallChange">
+                <el-radio-button :label="1">资讯</el-radio-button>
+                <el-radio-button :label="2">讲座</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="资讯总分类" label-width="100px" >
+              <el-radio-group v-model="inforTypeBig" @change="inforTypeBigChange">
+                <el-radio-button :label="1">高血压</el-radio-button>
+                <el-radio-button :label="2">糖尿病</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <!-- <el-button plain @click="addHandler(false)">添加资讯</el-button>
+          <el-button plain @click="deleteHandle">批量停用</el-button>
+          <el-button plain @click="deleteHandle">批量启用</el-button> -->
         </div>
       </div>
       <div>
@@ -24,7 +52,7 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
-            type="selection"
+            type="index"
             width="55">
           </el-table-column>
           <el-table-column
@@ -34,8 +62,8 @@
             <template slot-scope="scope">{{ scope.row.inforTitle }}</template>
           </el-table-column>
           <el-table-column
-            prop="inforTitleSmall"
-            label="资讯小标题"
+            prop="inforDesc"
+            label="资讯简述"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -168,10 +196,12 @@ export default {
       ],
       multipleSelection: [],
       currentPage:1,
-      pageSize:1,
-      pageTotal:40,
+      pageSize:10,
+      pageTotal:0,
       deleteConfirm:false,
-      currentHospital:{}
+      currentHospital:{},
+      inforTypeSmall:1,
+      inforTypeBig:1
     }
   },
   created() {
@@ -181,12 +211,19 @@ export default {
       this.multipleSelection = val;
     },
     handleSizeChange(val) {
+      this.pageSize = val
+      this.getData()
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val
+      this.getData()
       console.log(`当前页: ${val}`);
     },
-    searchHandler(){},
+    searchHandler(){
+      this.currentPage = 1
+      this.getData()
+    },
     addHandler(val){
       console.log('info',val)
       if(val){
@@ -212,16 +249,27 @@ export default {
       this.deleteConfirm = false
     },
     getData(){
+      
       let params = {
         isStop:0,
-        inforTypeSmall:1,
-        inforTypeBig:1,
-        pageNum:this.pageNum,
+        inforTypeSmall:this.inforTypeSmall,
+        inforTypeBig:this.inforTypeBig,
+        pageNum:this.currentPage,
         pageSize:this.pageSize
+      }
+      if(this.searchData){
+        params.valueLike = this.searchData
       }
       infoList(params).then(res=>{
         this.tableData = res.data.list
+        this.pageTotal = res.recordCount
       })
+    },
+    inforTypeSmallChange(){
+      this.getData()
+    },
+    inforTypeBigChange(){
+      this.getData()
     }
   },
   created () {
@@ -234,7 +282,9 @@ export default {
     margin: 20px;
   }
   .search-wrap{
-    width: 450px;
+    // width: 450px;
+    display: flex;
+    justify-content:space-between;
   }
   .button-wrap{
     margin: 20px 0;

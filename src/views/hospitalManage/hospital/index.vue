@@ -193,6 +193,7 @@ export default {
         this.action = '编辑'
         admin.password = ''
         this.currentEdit = admin
+        console.log(admin,'bianiji')
       }
       this.editDialog=true
     },

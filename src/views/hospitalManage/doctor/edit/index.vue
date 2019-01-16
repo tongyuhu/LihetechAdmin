@@ -38,9 +38,9 @@
     </el-form-item> -->
     <el-form-item label="账号开启或停用" v-if="action === '编辑'">
       <el-switch
-        v-model="tableData.isStop"
-        active-color="#ff4949"
-        inactive-color="#13ce66">
+        v-model="tableData.enabled"
+        active-color="#13ce66"
+        inactive-color="#ff4949">
       </el-switch>
     </el-form-item>
     
