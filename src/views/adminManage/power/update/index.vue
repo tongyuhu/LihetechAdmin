@@ -10,11 +10,12 @@
         :show-all-levels="false"
         :style="{width:'50%'}"
         @change="handlePowerChange"
+        placeholder="默认为当前上级地址"
       ></el-cascader>
     </el-form-item>
-    <!-- <el-form-item label="权限地址名称">
+    <el-form-item label="权限地址名称">
       <el-input v-model="tableData.authName"></el-input>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item label="url地址" prop="authUrl">
       <el-input v-model="tableData.authUrl"></el-input>
     </el-form-item>
@@ -70,7 +71,7 @@
       
       return {
         tableData: this.defaultData,
-        powerLists:this.power,
+        powerLists:[],
         props:{
           value: 'id',
           label:'authName',
@@ -111,7 +112,9 @@
       }
     },
     created () {
+      this.powerLists = this.power
       this.$set(this.$data,'tableData',this.defaultData)
+      console.log(this.powerLists,'tinajiadeliria')
     },
     methods: {
       update(formName){

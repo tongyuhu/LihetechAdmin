@@ -201,6 +201,7 @@ export default {
       parents:[],
       childs:[],
       complete:false,
+
       // parentId:''
     }
   },
@@ -215,23 +216,7 @@ export default {
     addHandler(row){
       console.log(row,'tianjia')
       let vm = this
-      // vm.childrenData = {
-      //   parentId:row.id
-      // }
       vm.addDialog = true
-      // async function getChild() {
-      //     await powerList(row.id).then(res=>{
-      //       if(res.code === '0000'){
-      //         res.data.forEach(item => {
-      //           item.add = false
-      //         })
-      //         vm.childrenData =  res.data
-      //         vm.addDialog = true
-      //       }
-      //     })
-      // }
-      // getChild()
-      // console.log( vm.childrenData,'zi')
     },
     deleteHandle(row){
       let arr = deleteChild(this.tableData,row)

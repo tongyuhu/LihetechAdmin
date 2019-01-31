@@ -160,6 +160,7 @@ export default {
               message: '更新成功',
               type: 'success'
             })
+            this.editDialog = false
           }else{
             vm.$message({
               message: '更新失败',

@@ -10,7 +10,7 @@
         <!-- {{ scope.$index }} -->
       </template>
     </el-table-column>
-    <el-table-column v-for="(column, index) in columns" v-else :key="column.value" :label="column.text" :width="column.width">
+    <el-table-column v-else v-for="(column, index) in columns" :key="column.value" :label="column.text" :width="column.width">
       <template slot-scope="scope">
         <!-- Todo -->
         <!-- eslint-disable-next-line vue/no-confusing-v-for-v-if -->
@@ -32,7 +32,6 @@
   Created: 2018/1/19-13:59
 */
 import treeToArray from './eval'
-// import {powerList,powerAdd,powerUpdate,powerStop} from '@/api/adminManage.js'
 export default {
   name: 'TreeTable',
   props: {

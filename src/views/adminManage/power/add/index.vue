@@ -9,6 +9,7 @@
         clearable
         :show-all-levels="false"
         :style="{width:'50%'}"
+        placeholder="默认为一级地址"
         @change="handlePowerChange"
       ></el-cascader>
         <!-- @active-item-change="handlePowerChange" -->
